@@ -41,6 +41,7 @@ function t(key, lang) {
 
 function applyI18n(lang) {
   lang = lang || window.__su_lang || "zh-CN";
+  window.__su_lang = lang;
   document.documentElement.lang = lang;
   const els = document.querySelectorAll("[data-i18n]");
   for (let i = 0; i < els.length; i++) {
