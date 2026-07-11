@@ -1,5 +1,6 @@
 // received.js — received files list and modal
 import { invoke, listen } from './state.js';
+import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { fmtSize, toast, esc } from './utils.js';
 import { t } from './i18n/index.js';
 
