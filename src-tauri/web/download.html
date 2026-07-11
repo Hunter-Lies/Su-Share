@@ -31,32 +31,56 @@ body{background:#1c1c1e}
 <div class="t" data-i18n="mobile_file_ready">文件就绪</div>
 <div class="fn">__NAME__</div>
 <div class="fs">__SIZE__</div>
-<a class="btn btn-a" id="dbtn" href="__URL__" data-i18n="mobile_download">下载文件</a>
+<a class="btn btn-a" id="dbtn" href="__URL__" download="__NAME__" data-i18n="mobile_download">下载文件</a>
 </div>
 <script>
-document.getElementById('dbtn').addEventListener('click',function(){
-  this.textContent=SU.t('mobile_downloading');
-  this.style.opacity='.7';
-  this.style.pointerEvents='none';
-});
-
-var wakeLock = null;
-async function keepAwake() {
-  try {
-    if ("wakeLock" in navigator) {
-      wakeLock = await navigator.wakeLock.request("screen");
+(function(){
+  var dbtn = document.getElementById('dbtn');
+  var dlUrl = '__URL__';
+  var dlName = '__NAME__';
+  
+  dbtn.addEventListener('click', async function(e){
+    e.preventDefault();
+    this.textContent = SU.t('mobile_downloading');
+    this.style.opacity = '.7';
+    this.style.pointerEvents = 'none';
+    
+    // try blob download first (avoids browser hijacking)
+    try {
+      var resp = await fetch(dlUrl);
+      if (!resp.ok) throw new Error('fetch failed');
+      var blob = await resp.blob();
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = dlName;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    } catch(err) {
+      // fallback: direct link
+      var a = document.createElement('a');
+      a.href = dlUrl;
+      a.download = dlName;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
-  } catch(e) {}
-  var v = document.createElement("video");
-  v.setAttribute("playsinline","");
-  v.setAttribute("muted","");
-  v.setAttribute("loop","");
-  v.style.display="none";
-  v.src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMWlzbWF2ZTAwMG1kYXRhAAAAAG+AAABAAAH+AAABAAABAAAAAgAAU29mdHdhcmU6IExpYnJlT2ZmaWNlL0xpYnJlT2ZmaWNlSW1wcmVzIDEuMC4wAHhyZWY6MS4wADI3LjEuMS44OQAAdXJsOm1lZGlhaW5mbzpzY2VuZTpzaWxlbnQAZnR5cDpzb2Z0d2FyZV9zaW11bGF0aW9uAAB42mNgZGBg3M/AAAKMDAz/GRgZGP+LMDAyMACx0RxvmBgYGUHAyMDwH0g/AwI+AAAHUwCzAAAA";
-  document.body.appendChild(v);
-  v.play().catch(function(){});
-}
-document.getElementById("dbtn").addEventListener("click", keepAwake);
+  });
+
+  var wakeLock = null;
+  async function keepAwake() {
+    try {
+      if ("wakeLock" in navigator) {
+        wakeLock = await navigator.wakeLock.request("screen");
+      }
+    } catch(e) {}
+  }
+  dbtn.addEventListener("click", keepAwake);
+})();
 </script>
 <script src="/i18n.js"></script>
 <script>

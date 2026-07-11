@@ -52,7 +52,8 @@ pub fn mime_for(name: &str) -> String {
 }
 
 pub fn make_header(k: &str, v: &str) -> tiny_http::Header {
-    format!("{}: {}", k, v).parse::<tiny_http::Header>().unwrap()
+    tiny_http::Header::from_bytes(k.as_bytes(), v.as_bytes())
+        .unwrap_or_else(|_| tiny_http::Header::from_bytes("X-Fallback".as_bytes(), "1".as_bytes()).unwrap())
 }
 
 pub fn fmt_speed(bytes: u64, dur: Duration) -> String {

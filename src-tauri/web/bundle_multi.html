@@ -59,13 +59,13 @@ btn.addEventListener("click",function(){
   var checked=document.querySelectorAll(".fcb:checked");
   if(checked.length===0)return;
   btn.style.opacity=".5";btn.style.pointerEvents="none";label.textContent=SU.t("mobile_downloading");
-  var urls=[];checked.forEach(function(cb){urls.push(cb.dataset.url)});
-  downloadSeq(urls,0);
+  var urls=[];var names=[];checked.forEach(function(cb){urls.push(cb.dataset.url);names.push(cb.dataset.name||"")});
+  downloadSeq(urls,names,0);
 });
-function downloadSeq(urls,i){
+function downloadSeq(urls,names,i){
   if(i>=urls.length){btn.style.opacity="1";btn.style.pointerEvents="auto";updateBtn();return}
-  var a=document.createElement("a");a.href=urls[i];a.download="";a.style.display="none";document.body.appendChild(a);a.click();document.body.removeChild(a);
-  setTimeout(function(){downloadSeq(urls,i+1)},600);
+  var a=document.createElement("a");a.href=urls[i];a.download=names[i]||"";a.style.display="none";document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){downloadSeq(urls,names,i+1)},600);
 }
 cbs.forEach(function(cb){cb.checked=true});updateBtn();
 var wakeLock=null;async function keepAwake(){try{if("wakeLock"in navigator)wakeLock=await navigator.wakeLock.request("screen")}catch(e){}var v=document.createElement("video");v.setAttribute("playsinline","");v.setAttribute("muted","");v.setAttribute("loop","");v.style.display="none";v.src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMWlzbWF2ZTAwMG1kYXRhAAAAAG+AAABAAAH+AAABAAABAAAAAgAAU29mdHdhcmU6IExpYnJlT2ZmaWNlL0xpYnJlT2ZmaWNlSW1wcmVzIDEuMC4wAHhyZWY6MS4wADI3LjEuMS44OQAAdXJsOm1lZGlhaW5mbzpzY2VuZTpzaWxlbnQAZnR5cDpzb2Z0d2FyZV9zaW11bGF0aW9uAAB42mNgZGBg3M/AAAKMDAz/GRgZGP+LMDAyMACx0RxvmBgYGUHAyMDwH0g/AwI+AAAHUwCzAAAA";document.body.appendChild(v);v.play().catch(function(){})}document.body.addEventListener("click",keepAwake,{once:true})

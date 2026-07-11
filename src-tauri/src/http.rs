@@ -290,8 +290,13 @@ fn serve_raw_file(req: tiny_http::Request, raw_id: &str, state: &Arc<AppState>) 
         Err(_) => { respond(req, 404, "text/plain", b"not found"); return (0, 404, entry.name); }
     };
     let total_len = match file.metadata() { Ok(m) => m.len(), Err(_) => 0 };
-    let cd = format!("attachment; filename=\"{}\"; filename*=UTF-8''{}",
-        entry.name.replace('"', ""), urlencoding::encode(&entry.name));
+    let safe_name = entry.name.replace('"', "").replace('\\', "");
+    let is_ascii = safe_name.chars().all(|c| c.is_ascii() && !c.is_control());
+    let cd = if is_ascii {
+        format!("attachment; filename=\"{}\"", safe_name)
+    } else {
+        format!("attachment; filename*=UTF-8''{}", urlencoding::encode(&safe_name))
+    };
 
     let range_header = req.headers().iter().find(|h| h.field.to_string().to_lowercase() == "range");
     let (start, end, status, content_len) = if let Some(rh) = range_header {
@@ -328,6 +333,7 @@ fn serve_raw_file(req: tiny_http::Request, raw_id: &str, state: &Arc<AppState>) 
             .with_header(make_header("Content-Length", &content_len.to_string()))
             .with_header(make_header("Content-Range", &content_range))
             .with_header(make_header("Accept-Ranges", "bytes"))
+            .with_header(make_header("X-Content-Type-Options", "nosniff"))
             .with_header(make_header("Access-Control-Allow-Origin", "*"))).ok();
         println!("[Su!] sent range: {} ({}-{})", entry.name, start, end);
         (content_len, 206, entry.name)
@@ -337,6 +343,7 @@ fn serve_raw_file(req: tiny_http::Request, raw_id: &str, state: &Arc<AppState>) 
             .with_header(make_header("Content-Disposition", &cd))
             .with_header(make_header("Content-Length", &total_len.to_string()))
             .with_header(make_header("Accept-Ranges", "bytes"))
+            .with_header(make_header("X-Content-Type-Options", "nosniff"))
             .with_header(make_header("Access-Control-Allow-Origin", "*"))).ok();
         println!("[Su!] sent: {} ({})", entry.name, fmt_size(total_len));
         (total_len, 200, entry.name)
@@ -369,8 +376,8 @@ fn serve_bundle_page(req: tiny_http::Request, bundle_id: &str, state: &Arc<AppSt
         for fid in file_ids.iter() {
             if let Some(entry) = files.get(fid) {
                 items.push_str(&format!(
-                    r###"<label class="fcard"><input type="checkbox" class="fcb" data-url="/d/{}?dl=1"><span class="fcard-ck"><i class="fa-regular fa-circle"></i><i class="fa-solid fa-circle-check"></i></span><div class="fcard-icon"><i class="fa-solid fa-file"></i></div><div class="fcard-name">{}</div><div class="fcard-size">{}</div></label>"###,
-                    fid, entry.name, fmt_size(entry.size)
+                    r###"<label class="fcard"><input type="checkbox" class="fcb" data-url="/d/{}?dl=1" data-name="{}"><span class="fcard-ck"><i class="fa-regular fa-circle"></i><i class="fa-solid fa-circle-check"></i></span><div class="fcard-icon"><i class="fa-solid fa-file"></i></div><div class="fcard-name">{}</div><div class="fcard-size">{}</div></label>"###,
+                    fid, entry.name, entry.name, fmt_size(entry.size)
                 ));
             }
         }
