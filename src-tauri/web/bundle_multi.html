@@ -54,7 +54,7 @@ body{background:#1c1c1e}
 var cbs=document.querySelectorAll(".fcb"),all=document.getElementById("chk-all"),btn=document.getElementById("btop-main"),label=document.getElementById("btop-label");
 all.addEventListener("change",function(){cbs.forEach(function(cb){cb.checked=all.checked});updateBtn()});
 cbs.forEach(function(cb){cb.addEventListener("change",updateBtn)});
-function updateBtn(){var checked=document.querySelectorAll(".fcb:checked"),n=checked.length,total=document.querySelectorAll(".fcb");label.textContent=SU.t("mobile_selected_n").replace("{cnt}",n);btn.style.opacity=n===0?".4":"1";all.checked=n===total.length}
+function updateBtn(){var checked=document.querySelectorAll(".fcb:checked"),n=checked.length,total=document.querySelectorAll(".fcb");label.textContent=SU.t("mobile_selected_n").replace("{n}",n);btn.style.opacity=n===0?".4":"1";all.checked=n===total.length}
 btn.addEventListener("click",function(){
   var checked=document.querySelectorAll(".fcb:checked");
   if(checked.length===0)return;
