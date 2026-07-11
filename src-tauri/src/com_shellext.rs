@@ -1,3 +1,4 @@
+#![cfg(target_os = "windows")]
 // COM Shell Extension - Win11 primary context menu support
 // Implements IExplorerCommand, registers via HKCU (no admin needed)
 

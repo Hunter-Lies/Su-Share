@@ -4,6 +4,7 @@ mod utils;
 mod qr;
 mod http;
 mod commands;
+#[cfg(target_os = "windows")]
 mod com_shellext;
 
 use std::path::PathBuf;
@@ -133,7 +134,7 @@ pub fn run() {
             commands::share_files, commands::get_server_info, commands::stop_share,
             commands::clear_all_shares, commands::clear_received, commands::generate_qr,
             commands::pick_files, commands::get_send_qr, commands::pick_folder,
-            commands::create_shortcut, commands::resize_window, commands::minimize_window,
+            #[cfg(target_os = "windows")] commands::create_shortcut, commands::resize_window, commands::minimize_window,
             commands::toggle_maximize, commands::close_window, commands::set_tray_mode,
             commands::get_cli_paths, commands::store_popup_data,
             commands::get_popup_data,

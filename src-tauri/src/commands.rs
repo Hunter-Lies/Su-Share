@@ -149,6 +149,7 @@ pub async fn pick_folder(app: tauri::AppHandle) -> Result<Vec<String>, String> {
     }
 }
 
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn create_shortcut(_state: tauri::State<Arc<AppState>>) -> Result<(), String> {
     let exe = std::env::current_exe().map_err(|e| e.to_string())?;
@@ -241,6 +242,7 @@ pub fn get_popup_data(state: tauri::State<Arc<AppState>>) -> serde_json::Value {
 #[tauri::command]
 pub fn exit_app() { std::process::exit(0); }
 
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn register_context_menu() -> Result<String, String> {
     let exe = std::env::current_exe().map_err(|e| e.to_string())?;
@@ -254,6 +256,7 @@ pub fn register_context_menu() -> Result<String, String> {
     Ok("ok".into())
 }
 
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn unregister_context_menu() -> Result<String, String> {
     crate::com_shellext::regdelete("Software\\Classes\\*\\shell\\SuShare");
