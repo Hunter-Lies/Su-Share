@@ -1,15 +1,15 @@
 <p align="center"><img src="logo.png" width="128" alt="Su!"></p>
 
-<h1 align="center">Su! — LAN File Transfer</h1>
+<h1 align="center">Su! — 局域网文件快传</h1>
 
 <p align="center">
-  <a href="README_zh.md"><img src="https://img.shields.io/badge/中文-README-red?style=for-the-badge" alt="中文"></a>
+  <a href="README_en.md"><img src="https://img.shields.io/badge/English-README-blue?style=for-the-badge" alt="English"></a>
 </p>
 
-<p align="center"><em>咻一下，就到了！ Whoosh, it's there!</em></p>
+<p align="center"><em>咻一下，就到了！</em></p>
 
 <p align="center">
-  <img src="screenshot.png" width="600" alt="Screenshot">
+  <img src="screenshot.png" width="600" alt="截图">
 </p>
 
 <p align="center">
@@ -19,58 +19,58 @@
 
 ---
 
-A lightweight LAN file transfer tool. **No cloud, no login, no app install** — scan a QR code and transfer files between your phone and PC in seconds.
+轻量级局域网文件传输工具。**无需云端、无需登录、无需安装 App**，手机扫码即可与电脑互传文件。
 
-## Features
+## 功能特性
 
-- **QR Share** — Right-click any file, generate a QR code, phone scans to download
-- **Phone → PC** — Send files from your phone browser over LAN
-- **Batch Download** — Select all, single, or batch with clear file list
-- **5 Languages** — 简体中文 · 繁體中文 · English · 日本語 · 한국어
-- **Dark Mode** — Classic & frosted glass themes, auto system follow
-- **Smart Batching** — Auto device detection (iPhone / Android / Windows / Mac / Linux), group by batch
-- **Sound + Popup** — Audio alerts and card notifications on receive
-- **System Tray** — Minimize to tray, auto-start with system
-- **Range Download** — Resumable chunked downloads for large files
+- **二维码分享** — 右键任意文件 → 生成二维码 → 手机扫码即下载
+- **手机传电脑** — 手机浏览器打开网页，选择文件发送到电脑
+- **多文件批量** — 全选 / 单选 / 批量下载，文件清单清晰
+- **5 种语言** — 简体中文 · 繁體中文 · English · 日本語 · 한국어
+- **深色模式** — 经典 / 毛玻璃主题，自动跟随系统
+- **智能批次** — 自动识别设备 (iPhone / Android / Windows / Mac / Linux)，按批次分组
+- **提示音 + 弹窗** — 收到文件时播放音效、弹出卡片通知
+- **系统托盘** — 关闭到托盘、开机自启
+- **断点续传** — Range 分块下载，大文件无忧
 
-## Quick Start
+## 快速开始
 
-1. Download the [latest Release](https://github.com/Hunter-Lies/Su/releases)
-2. Run `Su-v1.2.0-windows-x64.exe` (or the x86 version)
-3. Drag files to the window → phone scans QR to download
-4. Phone scans QR → select files to send to PC
+1. 下载 [最新 Release](https://github.com/Hunter-Lies/Su/releases)
+2. 双击 `Su-v1.2.0-windows-x64.exe`（或 x86 版本）
+3. 拖文件到窗口 → 手机扫码下载
+4. 手机端扫码 → 选择文件发到电脑
 
-## Tech Stack
+## 技术栈
 
-| Layer | Stack |
-|-------|-------|
-| Desktop App | [Tauri v2](https://tauri.app/) + Rust |
-| UI | Vanilla JS (ES Modules) + CSS Custom Properties |
-| Mobile Pages | Plain HTML/JS/CSS, served by embedded HTTP server |
-| HTTP Server | [tiny_http](https://github.com/tiny-http/tiny-http) |
-| QR Code | [qrcode](https://crates.io/crates/qrcode) |
-| Audio | [rodio](https://github.com/RustAudio/rodio) + [symphonia](https://github.com/pdeljanov/Symphonia) |
+| 层级 | 技术 |
+|------|------|
+| 桌面应用 | [Tauri v2](https://tauri.app/) + Rust |
+| 前端 UI | Vanilla JS (ES Modules) + CSS 自定义属性 |
+| 手机端页面 | 纯 HTML/JS/CSS，由内置 HTTP 服务器提供 |
+| HTTP 服务 | [tiny_http](https://github.com/tiny-http/tiny-http) |
+| 二维码 | [qrcode](https://crates.io/crates/qrcode) |
+| 音频 | [rodio](https://github.com/RustAudio/rodio) + [symphonia](https://github.com/pdeljanov/Symphonia) |
 
-## Build
+## 构建
 
-**Prerequisites**
+**环境要求**
 
-| Tool | Version |
-|------|---------|
+| 工具 | 版本 |
+|------|------|
 | [Node.js](https://nodejs.org/) | >= 18 |
 | [Rust](https://rustup.rs/) | >= 1.70 |
-| WebView2 | Built-in on Windows 10/11 |
+| WebView2 | Windows 10/11 已内置 |
 
 ```bash
 npm install
-npm run tauri dev                    # Development
-npm run tauri build                  # Release (x64)
-npm run tauri build -- --target i686-pc-windows-msvc  # Release (x86)
+npm run tauri dev                    # 开发模式
+npm run tauri build                  # 构建 64 位
+npm run tauri build -- --target i686-pc-windows-msvc  # 构建 32 位
 ```
 
-Output in `src-tauri/target/`.
+构建产物在 `src-tauri/target/` 下。
 
-## Project Structure
+## 项目结构
 
 ```
 Su/
@@ -119,19 +119,19 @@ Su/
 ├── package.json                  # Node 依赖
 ├── logo.png                      # Logo
 ├── screenshot.png                # 截图
-├── README.md                     # English
-├── README_zh.md                  # 中文
-└── LICENSE                       # MIT
+├── README.md                     # 中文说明（默认）
+├── README_en.md                  # 英文说明
+└── LICENSE                       # MIT 许可证
 ```
 
-## Contributors
+## 贡献者
 
 [![Contributors](https://contrib.rocks/image?repo=Hunter-Lies/Su)](https://github.com/Hunter-Lies/Su/graphs/contributors)
 
-## License
+## 许可证
 
-MIT — see [LICENSE](LICENSE)
+MIT — 详见 [LICENSE](LICENSE)
 
-## Author
+## 作者
 
-**HunterLies** · [Bilibili](https://space.bilibili.com/488494586) · [Website](https://htovo.com)
+**HunterLies** · [B站](https://space.bilibili.com/488494586) · [官网](https://htovo.com)
