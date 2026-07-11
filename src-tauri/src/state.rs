@@ -40,6 +40,8 @@ pub struct AppState {
     pub sound_name: Mutex<String>,
     pub batch_expected: Mutex<u64>,
     pub batch_received_count: Mutex<u64>,
+    pub auto_receive: Mutex<bool>,
+    pub pending_confirmations: Mutex<std::collections::HashMap<String, std::sync::mpsc::Sender<bool>>>,
 }
 
 pub fn save_received(state: &Arc<AppState>) {

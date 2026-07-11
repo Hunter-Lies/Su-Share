@@ -6,6 +6,7 @@ import { toast } from './utils.js';
 
 function setupSettings() {
   setupLangDropdown();
+  setupAutoReceiveToggle();
   setupMobileLangToggle();
   invoke("get_server_info").then(function(info) {
     if (settingsIp) settingsIp.textContent = info.lan_ip + ":" + info.port;
@@ -190,6 +191,16 @@ function setupClearReceivedToggle() {
   });
 }
 
+
+
+function setupAutoReceiveToggle() {
+  var toggle = document.getElementById("auto-receive-toggle");
+  if (!toggle) return;
+  invoke("get_auto_receive").then(function(v) { toggle.checked = v; }).catch(function() {});
+  toggle.addEventListener("change", function() {
+    invoke("set_auto_receive", { enable: toggle.checked });
+  });
+}
 
 function setupMobileLangToggle() {
   var toggle = document.getElementById("mobile-lang-mode-toggle");

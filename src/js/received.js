@@ -99,6 +99,28 @@ function setupReceived() {
     console.error("[Su!] listen file-received failed:", e);
   });
 
+  listen("upload-requested", function(event) {
+    console.log("[Su!] upload-requested:", event.payload);
+    try {
+      var d = event.payload;
+      var modal = document.getElementById("upload-confirm-modal");
+      var body = document.getElementById("confirm-body");
+      var acceptBtn = document.getElementById("confirm-accept-btn");
+      var rejectBtn = document.getElementById("confirm-reject-btn");
+      if (!modal) return;
+      body.textContent = t("received_from") + " " + (d.device || t("unknown_device")) + " \u00b7 " + d.count + " " + t("files_count");
+      modal.classList.remove("hidden");
+      function respond(accepted) {
+        modal.classList.add("hidden");
+        acceptBtn.onclick = null;
+        rejectBtn.onclick = null;
+        invoke("confirm_upload", { id: d.id, accepted: accepted }).catch(function(){});
+      }
+      acceptBtn.onclick = function() { respond(true); };
+      rejectBtn.onclick = function() { respond(false); };
+    } catch(e) { console.error("[Su!] upload-requested error:", e); }
+  });
+
   listen("batch-complete", function(event) {
     console.log("[Su!] batch-complete event:", event.payload);
     var d = event.payload;

@@ -88,6 +88,20 @@ fn dispatch(req: tiny_http::Request, url: &str, method: &str, state: &Arc<AppSta
 }
 
 
+fn guess_device(req: &tiny_http::Request) -> String {
+    let ua = req.headers().iter()
+        .find(|h| h.field.equiv("User-Agent"))
+        .map(|h| h.value.to_string())
+        .unwrap_or_default();
+    let ua_lower = ua.to_lowercase();
+    if ua_lower.contains("iphone") || ua_lower.contains("ipad") { "iPhone".into() }
+    else if ua_lower.contains("android") { "Android".into() }
+    else if ua_lower.contains("windows") { "Windows".into() }
+    else if ua_lower.contains("macintosh") || ua_lower.contains("mac os") { "Mac".into() }
+    else if ua_lower.contains("linux") { "Linux".into() }
+    else { "Unknown".into() }
+}
+
 fn handle_upload_start(mut req: tiny_http::Request, state: &Arc<AppState>) -> (u64, u16, String) {
     let mut body = String::new();
     req.as_reader().read_to_string(&mut body).ok();
@@ -95,6 +109,38 @@ fn handle_upload_start(mut req: tiny_http::Request, state: &Arc<AppState>) -> (u
     println!("[Su!] upload-start: expecting {} files", count);
     *state.batch_expected.lock().unwrap() = count;
     *state.batch_received_count.lock().unwrap() = 0;
+
+    let auto = *state.auto_receive.lock().unwrap();
+    if !auto {
+        // Generate pending ID and emit event to frontend
+        let pending_id: String = std::iter::repeat_with(|| fastrand::alphanumeric()).take(10).collect();
+        let (tx, rx) = std::sync::mpsc::channel();
+        state.pending_confirmations.lock().unwrap().insert(pending_id.clone(), tx);
+
+        let device = guess_device(&req);
+        // Focus window and emit event
+        if let Some(app) = state.app_handle.lock().ok().and_then(|h| h.clone()) {
+            if let Some(w) = app.get_webview_window("main") {
+                let _ = w.show();
+                let _ = w.set_focus();
+            }
+            let _ = app.emit("upload-requested", serde_json::json!({
+                "id": pending_id,
+                "device": device,
+                "count": count,
+            }));
+        }
+        println!("[Su!] upload-start: waiting for user confirmation...");
+        let accepted = rx.recv().unwrap_or(false);
+        state.pending_confirmations.lock().unwrap().remove(&pending_id);
+        if !accepted {
+            println!("[Su!] upload-start: rejected by user");
+            respond(req, 403, "text/plain", b"rejected");
+            return (0, 403, String::new());
+        }
+        println!("[Su!] upload-start: accepted by user");
+    }
+
     respond(req, 200, "text/plain", b"ok");
     (0, 200, String::new())
 }

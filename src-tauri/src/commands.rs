@@ -344,3 +344,23 @@ pub fn get_mobile_lang_mode(state: tauri::State<Arc<AppState>>) -> String {
 pub fn set_mobile_lang_mode(state: tauri::State<Arc<AppState>>, mode: String) {
     *state.mobile_lang_mode.lock().unwrap() = mode;
 }
+
+#[tauri::command]
+pub fn confirm_upload(id: String, accepted: bool, state: tauri::State<'_, crate::state::AppState>) {
+    if let Ok(mut map) = state.pending_confirmations.lock() {
+        if let Some(tx) = map.remove(&id) {
+            let _ = tx.send(accepted);
+        }
+    }
+}
+
+#[tauri::command]
+pub fn get_auto_receive(state: tauri::State<'_, crate::state::AppState>) -> bool {
+    state.auto_receive.lock().map(|g| *g).unwrap_or(true)
+}
+
+#[tauri::command]
+pub fn set_auto_receive(enable: bool, state: tauri::State<'_, crate::state::AppState>) {
+    *state.auto_receive.lock().unwrap() = enable;
+}
+

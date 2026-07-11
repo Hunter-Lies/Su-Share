@@ -1341,3 +1341,20 @@ body {
   border-bottom: 1px solid rgba(52, 199, 89, 0.15);
   margin-bottom: 4px;
 }
+
+/* Upload Confirmation Modal */
+#upload-confirm-modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.55); backdrop-filter: blur(8px); }
+#upload-confirm-modal.hidden { display: none; }
+.confirm-card { background: var(--bg-card, #fff); border-radius: 20px; padding: 32px 28px; max-width: 360px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+.confirm-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--t1, #1a1a1a); }
+.confirm-card p { font-size: 14px; color: var(--t2, #666); margin-bottom: 24px; line-height: 1.5; }
+.confirm-btns { display: flex; gap: 12px; }
+.confirm-btns button { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-reject { background: var(--bg-hover, #f0efed); color: var(--t1, #1a1a1a); }
+.btn-accept { background: #1a1a1a; color: #fff; }
+.btn-reject:active, .btn-accept:active { opacity: .8; }
+@media (prefers-color-scheme: dark) {
+  .btn-reject { background: rgba(255,255,255,.1); color: #e8e8ec; }
+  .btn-accept { background: #e8e8ec; color: #1c1c1e; }
+}
+

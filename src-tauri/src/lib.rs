@@ -115,6 +115,8 @@ pub fn run() {
         sound_name: std::sync::Mutex::new("u6295u9012".into()),
         batch_expected: std::sync::Mutex::new(0),
         batch_received_count: std::sync::Mutex::new(0),
+        auto_receive: std::sync::Mutex::new(true),
+        pending_confirmations: std::sync::Mutex::new(std::collections::HashMap::new()),
         clear_on_close: std::sync::Mutex::new(false),
         lang: std::sync::Mutex::new("zh-CN".into()),
         mobile_lang_mode: std::sync::Mutex::new("server".into()),
@@ -132,7 +134,7 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .manage(app_state)
         .invoke_handler(tauri::generate_handler![
-            commands::share_files, commands::get_server_info, commands::stop_share,
+            commands::confirm_upload, commands::get_auto_receive, commands::set_auto_receive, commands::share_files, commands::get_server_info, commands::stop_share,
             commands::clear_all_shares, commands::clear_received, commands::generate_qr,
             commands::pick_files, commands::get_send_qr, commands::pick_folder,
             #[cfg(target_os = "windows")] commands::create_shortcut, commands::resize_window, commands::minimize_window,
