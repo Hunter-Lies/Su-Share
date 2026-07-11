@@ -1,6 +1,6 @@
 // theme.js — theme, style, titlebar, collapse, tabs
 import { invoke, themeDd, themeDdLabel, styleDd, styleDdLabel } from './state.js';
-import { t } from "./i18n.js";
+import { t } from "./i18n/index.js";
 
 function applyTheme() {
   var saved = localStorage.getItem("su-theme");

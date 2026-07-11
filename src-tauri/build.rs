@@ -2,10 +2,22 @@ fn main() {
     println!("cargo:rerun-if-changed=../src/index.html");
     println!("cargo:rerun-if-changed=../src/css/styles.css");
     println!("cargo:rerun-if-changed=../src/js/main.js");
+    println!("cargo:rerun-if-changed=../src/js/i18n/index.js");
+    println!("cargo:rerun-if-changed=../src/js/i18n/zh-CN.js");
+    println!("cargo:rerun-if-changed=../src/js/i18n/zh-TW.js");
+    println!("cargo:rerun-if-changed=../src/js/i18n/en.js");
+    println!("cargo:rerun-if-changed=../src/js/i18n/ja.js");
+    println!("cargo:rerun-if-changed=../src/js/i18n/ko.js");
     println!("cargo:rerun-if-changed=../src/assets/fonts");
     println!("cargo:rerun-if-changed=web/send.html");
     println!("cargo:rerun-if-changed=web/download.html");
     println!("cargo:rerun-if-changed=web/bundle_multi.html");
+    println!("cargo:rerun-if-changed=web/i18n.js");
+    println!("cargo:rerun-if-changed=web/i18n/zh-CN.js");
+    println!("cargo:rerun-if-changed=web/i18n/zh-TW.js");
+    println!("cargo:rerun-if-changed=web/i18n/en.js");
+    println!("cargo:rerun-if-changed=web/i18n/ja.js");
+    println!("cargo:rerun-if-changed=web/i18n/ko.js");
     println!("cargo:rerun-if-changed=tauri.conf.json");
     tauri_build::build()
 }

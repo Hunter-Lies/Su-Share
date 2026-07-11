@@ -1,5 +1,5 @@
 // main.js — entry point for Su!
-import { applyI18n } from './i18n.js';
+import { applyI18n } from './i18n/index.js';
 import { invoke, initDomRefs } from './state.js';
 import { applyTheme, applyStyle, setupTitlebar, setupCollapse, setupTabs } from './theme.js';
 import { setupDragDrop, setupModal, setupClearAll, loadServerInfo, loadSendQr, updateEmpty } from './share.js';

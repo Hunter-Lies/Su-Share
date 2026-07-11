@@ -1,7 +1,7 @@
 // received.js — received files list and modal
 import { invoke, listen } from './state.js';
 import { fmtSize, toast, esc } from './utils.js';
-import { t } from './i18n.js';
+import { t } from './i18n/index.js';
 
 function showReceivedModal(d) {
   var modal = document.getElementById("received-modal");

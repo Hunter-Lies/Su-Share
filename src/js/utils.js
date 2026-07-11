@@ -1,7 +1,7 @@
 // utils.js — utility functions for Su!
 import { invoke, toastEl, qrCache } from './state.js';
 var _toastTimer = null;
-import { t } from './i18n.js';
+import { t } from './i18n/index.js';
 
 function fmtSize(bytes) {
   if (bytes < 1024) return bytes + " B";

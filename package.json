@@ -1,16 +1,17 @@
-{
-  "name": "su",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "tauri": "tauri"
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^2"
-  },
-  "dependencies": {
-    "@tauri-apps/api": "^2.11.1",
-    "qrcode-generator": "^2.0.4"
-  }
+﻿{
+    "name":  "su",
+    "private":  true,
+    "version":  "0.1.0",
+    "type":  "module",
+    "scripts":  {
+                    "prebuild":  "python src-tauri/web/i18n/build.py",
+                    "tauri":  "npm run prebuild \u0026\u0026 tauri"
+                },
+    "devDependencies":  {
+                            "@tauri-apps/cli":  "^2"
+                        },
+    "dependencies":  {
+                         "@tauri-apps/api":  "^2.11.1",
+                         "qrcode-generator":  "^2.0.4"
+                     }
 }

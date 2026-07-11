@@ -1,6 +1,6 @@
 // settings.js — settings page: toggles, dropdowns, context menu
 import { invoke, downloadsDir, pickDirBtn, themeDd, themeDdLabel, styleDd, styleDdLabel, autostartToggle, shortcutBtn, settingsIp, soundToggle, soundDd, soundDdBtn, soundDdLabel, soundDdMenu, popupToggle, trayToggle, clearReceivedToggle } from './state.js';
-import { t } from "./i18n.js";
+import { t } from "./i18n/index.js";
 import { applyTheme, applyStyle } from './theme.js';
 import { toast } from './utils.js';
 

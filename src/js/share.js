@@ -1,7 +1,7 @@
 // share.js — file sharing UI: drag-drop, QR modal, file cards
 import { invoke, listen, dropZone, fileList, emptyHint, clearAllBtn, qrModal, qrModalImg, qrModalName, qrModalUrl, qrModalCopy, sendQrWrap, settingsIp } from './state.js';
 import { fmtSize, toast, copyText, esc, getQrDataUrl } from './utils.js';
-import { t } from './i18n.js';
+import { t } from './i18n/index.js';
 
 function setupDragDrop() {
   document.getElementById("browse-link").addEventListener("click", async function(e) {
