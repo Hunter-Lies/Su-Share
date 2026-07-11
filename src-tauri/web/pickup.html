@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/fonts/all.min.css">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>取件码 - Su!</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;background:#f5f4f2;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;-webkit-tap-highlight-color:transparent}
+.c{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.iw{width:80px;height:80px;background:#fff;border-radius:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.06);color:#1a1a1a}
+.t{font-size:22px;font-weight:700;color:#1a1a1a;text-align:center}
+.d{font-size:14px;color:#999;text-align:center;line-height:1.5}
+.pin-wrap{display:flex;gap:8px;justify-content:center;width:100%}
+.pin-box{flex:1;height:52px;min-width:0;border:2px solid #e8e5e0;border-radius:12px;text-align:center;font-size:22px;font-family:inherit;font-weight:700;outline:none;background:#fff;color:#1a1a1a;transition:border .2s;-webkit-appearance:none;text-transform:uppercase;ime-mode:disabled}
+.pin-box:focus{border-color:#1a1a1a}
+.pin-box.filled{background:#f0f0f5}
+.btn{width:100%;padding:16px;border:none;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;-webkit-appearance:none}
+.btn-a{background:#1a1a1a;color:#fff}
+.btn-a:active{opacity:.85;transform:scale(.98)}
+.err{font-size:13px;color:#e55;min-height:20px;text-align:center}
+@media(prefers-color-scheme:dark){body{background:#1c1c1e}.t{color:#e8e8ec}.d{color:#888}.iw{background:#2a2a2e;box-shadow:0 4px 20px rgba(0,0,0,.3);color:#e8e8ec}.pin-box{background:#2a2a2e;border-color:#3a3a3e;color:#e8e8ec}.pin-box:focus{border-color:#e8e8ec}.pin-box.filled{background:#323238}.btn-a{background:#e8e8ec;color:#1c1c1e}}
+</style>
+</head>
+<body>
+<div class="c">
+<div class="iw"><i class="fa-solid fa-box-open" style="font-size:36px"></i></div>
+<div class="t">需要取件码</div>
+<div class="d">请输入4位取件码以下载文件</div>
+<div id="pin-area" class="pin-wrap"></div>
+<button class="btn btn-a" id="submit">验证</button>
+<div class="err" id="error"></div>
+</div>
+<script>
+var bid="__BID__";
+var pinArea=document.getElementById("pin-area");
+for(var i=0;i<4;i++){
+var box=document.createElement("input");
+box.type="text";box.className="pin-box";box.maxLength=1;
+box.autocomplete="off";box.inputMode="text";
+box.addEventListener("input",function(ev){
+var v=ev.target.value.toUpperCase();ev.target.value=v.replace(/[^A-Z0-9]/g,"");
+ev.target.classList.toggle("filled",!!ev.target.value);
+if(ev.target.value){var n=ev.target.nextElementSibling;if(n&&n.classList.contains("pin-box"))n.focus();}
+});
+box.addEventListener("keydown",function(ev){
+if(ev.key==="Backspace"&&!ev.target.value){var p=ev.target.previousElementSibling;if(p&&p.classList.contains("pin-box")){p.focus();p.select();}}
+});
+pinArea.appendChild(box);
+}
+document.getElementById("submit").addEventListener("click",async function(){
+var boxes=pinArea.querySelectorAll(".pin-box");var p="";boxes.forEach(function(b){p+=b.value});
+if(p.length<4)return;
+var e=document.getElementById("error");
+try{
+var r=await fetch("/pickup-auth/"+bid,{method:"POST",body:p});
+if(r.ok){location.reload();}else{e.textContent="取件码错误";boxes.forEach(function(b){b.value="";b.classList.remove("filled")});pinArea.querySelector(".pin-box").focus();}
+}catch(ex){e.textContent="网络错误";}
+});
+pinArea.querySelector(".pin-box").focus();
+</script>
+</body>
+</html>

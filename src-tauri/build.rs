@@ -12,6 +12,8 @@ fn main() {
     println!("cargo:rerun-if-changed=web/send.html");
     println!("cargo:rerun-if-changed=web/download.html");
     println!("cargo:rerun-if-changed=web/bundle_multi.html");
+    println!("cargo:rerun-if-changed=web/auth.html");
+    println!("cargo:rerun-if-changed=web/pickup.html");
     println!("cargo:rerun-if-changed=web/i18n.js");
     println!("cargo:rerun-if-changed=web/i18n/zh-CN.js");
     println!("cargo:rerun-if-changed=web/i18n/zh-TW.js");
