@@ -19,7 +19,7 @@
 
 ## 技术栈
 
-- **桌面端**: Tauri v2 + Rust
+- **框架**: Tauri v2 (Rust + WebView2)
 - **前端**: Vanilla JS (ES Modules) + CSS 自定义属性
 - **手机端页面**: 纯 HTML/JS/CSS，由内置 HTTP 服务器提供
 - **HTTP 服务**: tiny_http (Rust)
@@ -68,24 +68,32 @@ Su/
 
 ### 环境要求
 
-- [Node.js](https://nodejs.org/) >= 18
-- [Rust](https://www.rust-lang.org/) >= 1.70
-- Windows: [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/) 或 [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+| 工具 | 说明 |
+|------|------|
+| [Node.js](https://nodejs.org/) >= 18 | JavaScript 运行时 |
+| [Rust](https://www.rust-lang.org/tools/install) >= 1.70 | `rustup` 安装，包含 `cargo` |
+| WebView2 | Windows 10/11 已内置，Win 7 需手动安装 |
 
-### 开发模式
+### 开发
 
 ```bash
 npm install
 npm run tauri dev
 ```
 
-### 构建正式版
+### 构建安装包
 
 ```bash
 npm run tauri build
 ```
 
-构建产物在 `src-tauri/target/release/`。
+构建产物：
+
+| 路径 | 说明 |
+|------|------|
+| `src-tauri/target/release/su.exe` | 绿色版（免安装） |
+| `src-tauri/target/release/bundle/msi/` | MSI 安装包 |
+| `src-tauri/target/release/bundle/nsis/` | NSIS 安装包 |
 
 ## 使用
 
@@ -93,6 +101,7 @@ npm run tauri build
 2. 电脑端：拖拽文件到窗口生成二维码，手机扫码下载
 3. 手机端：扫码进入发送页面，选择文件发送到电脑
 4. 接收的文件保存在 `下载/Su/` 文件夹
+5. 右键菜单：在设置中注册后，右键任意文件 → 通过 Su! 分享
 
 ## 许可证
 
