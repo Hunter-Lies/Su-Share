@@ -2,6 +2,7 @@
 use std::thread;
 use std::time::Instant;
 use tauri::Emitter;
+use tauri::Manager;
 use crate::state::{AppState, FileEntry, ReceivedFile, save_shares};
 use crate::sound;
 
@@ -230,7 +231,13 @@ fn handle_upload(mut req: tiny_http::Request, url: &str, state: &Arc<AppState>) 
                         "ko" => (format!("Su! - 수신"), format!("{} · {}개 파일", device, expected)),
                         _ => (format!("Su! - 接收记录"), format!("来自 {} · {} 个文件", device, expected)),
                     };
-                    app.notification().builder().title(&title).body(&body).show().ok();
+                    let n = app.notification().builder().title(&title).body(&body);
+                    n.show().ok();
+                    // Bring window to front
+                    if let Some(w) = app.get_webview_window("main") {
+                        let _ = w.show();
+                        let _ = w.set_focus();
+                    }
                 }
                 *state.batch_expected.lock().unwrap() = 0;
             }
