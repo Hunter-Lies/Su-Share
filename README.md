@@ -13,40 +13,54 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Hunter-Lies/Su/releases"><img src="https://img.shields.io/github/v/release/Hunter-Lies/Su?style=flat-square" alt="Release"></a>
+  <a href="https://github.com/Hunter-Lies/Su/releases/latest"><img src="https://img.shields.io/github/v/release/Hunter-Lies/Su?style=flat-square" alt="Release"></a>
+  <a href="https://github.com/Hunter-Lies/Su/releases/latest"><img src="https://img.shields.io/github/downloads/Hunter-Lies/Su/total?style=flat-square" alt="Downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Hunter-Lies/Su?style=flat-square" alt="MIT"></a>
+  <a href="https://github.com/Hunter-Lies/Su/stargazers"><img src="https://img.shields.io/github/stars/Hunter-Lies/Su?style=flat-square" alt="Stars"></a>
 </p>
 
 ---
 
-轻量级局域网文件传输工具。**无需云端、无需登录、无需安装 App**，手机扫码即可与电脑互传文件。
+**Su!** 是一款轻量级局域网文件传输工具。无需云端、无需登录、无需安装 App——手机扫个码，文件就传到电脑上了。反过来，右键任意文件生成二维码，手机一扫就下走了。
+
+## 下载
+
+| 版本 | 下载 | 适用 |
+|------|------|------|
+| 64 位 | [Su-v1.2.0-windows-x64.zip](https://github.com/Hunter-Lies/Su/releases/latest/download/Su-v1.2.0-windows-x64.zip) | 主流 Windows 10/11 |
+| 32 位 | [Su-v1.2.0-windows-x86.zip](https://github.com/Hunter-Lies/Su/releases/latest/download/Su-v1.2.0-windows-x86.zip) | 老旧 / 32 位系统 |
+
+> 解压后双击 `su.exe` 即可运行，**无需安装**。如遇 SmartScreen 拦截，点击「更多信息」→「仍要运行」。
+>
+> macOS / Linux 用户可自行构建（见下方构建说明），部分功能（右键菜单、毛玻璃）暂不可用。
 
 ## 功能特性
 
 - **二维码分享** — 右键任意文件 → 生成二维码 → 手机扫码即下载
 - **手机传电脑** — 手机浏览器打开网页，选择文件发送到电脑
 - **多文件批量** — 全选 / 单选 / 批量下载，文件清单清晰
-- **5 种语言** — 简体中文 · 繁體中文 · English · 日本語 · 한국어
+- **断点续传** — Range 分块下载，传一半关了浏览器也能续上
+- **智能批次** — 自动识别设备 (iPhone / Android / Windows / Mac / Linux)，按批次分组显示
+- **5 种语言** — 简体中文 · 繁體中文 · English · 日本語 · 한국어，手机端自动跟随
 - **深色模式** — 经典 / 毛玻璃主题，自动跟随系统
-- **智能批次** — 自动识别设备 (iPhone / Android / Windows / Mac / Linux)，按批次分组
 - **提示音 + 弹窗** — 收到文件时播放音效、弹出卡片通知
 - **系统托盘** — 关闭到托盘、开机自启
-- **断点续传** — Range 分块下载，大文件无忧
+- **绿色免安装** — 一个 exe，解压即用，不写注册表
 
 ## 快速开始
 
-1. 下载 [最新 Release](https://github.com/Hunter-Lies/Su/releases)
-2. 双击 `Su-v1.2.0-windows-x64.exe`（或 x86 版本）
-3. 拖文件到窗口 → 手机扫码下载
-4. 手机端扫码 → 选择文件发到电脑
+1. [下载](https://github.com/Hunter-Lies/Su/releases/latest)对应版本 zip，解压
+2. 双击 `su.exe`，软件启动后窗口显示二维码
+3. **手机发电脑**：手机扫码 → 选择文件发送
+4. **电脑发手机**：拖文件到窗口 → 手机扫码下载
 
 ## 技术栈
 
 | 层级 | 技术 |
 |------|------|
-| 桌面应用 | [Tauri v2](https://tauri.app/) + Rust |
+| 桌面框架 | [Tauri v2](https://tauri.app/) + Rust |
 | 前端 UI | Vanilla JS (ES Modules) + CSS 自定义属性 |
-| 手机端页面 | 纯 HTML/JS/CSS，由内置 HTTP 服务器提供 |
+| 手机端页面 | 纯 HTML/JS/CSS，由内置 HTTP 服务提供 |
 | HTTP 服务 | [tiny_http](https://github.com/tiny-http/tiny-http) |
 | 二维码 | [qrcode](https://crates.io/crates/qrcode) |
 | 音频 | [rodio](https://github.com/RustAudio/rodio) + [symphonia](https://github.com/pdeljanov/Symphonia) |
@@ -63,18 +77,18 @@
 
 ```bash
 npm install
-npm run tauri dev                    # 开发模式
-npm run tauri build                  # 构建 64 位
+npm run tauri dev                         # 开发模式
+npm run tauri build                       # 构建 64 位
 npm run tauri build -- --target i686-pc-windows-msvc  # 构建 32 位
 ```
 
-构建产物在 `src-tauri/target/` 下。
+构建产物在 `src-tauri/target/release/` 下。
 
 ## 项目结构
 
 ```
 Su/
-├── src/                          # 桌面前端 · Desktop Frontend
+├── src/                          # 桌面前端
 │   ├── index.html                # 主窗口
 │   ├── css/
 │   │   └── styles.css            # 全部样式
@@ -89,7 +103,7 @@ Su/
 │   │   └── theme.js              # 主题与外观
 │   └── assets/
 │       └── fonts/                # Font Awesome 6（本地）
-├── src-tauri/                    # Rust 后端 · Rust Backend
+├── src-tauri/                    # Rust 后端
 │   ├── Cargo.toml                # Rust 依赖
 │   ├── tauri.conf.json           # Tauri 配置
 │   ├── build.rs                  # 构建脚本
@@ -97,13 +111,13 @@ Su/
 │   │   └── default.json          # Tauri 权限
 │   ├── icons/                    # 应用图标
 │   ├── sounds/                   # 提示音文件 (mp3)
-│   ├── web/                      # 手机端页面 · Mobile Pages
+│   ├── web/                      # 手机端页面
 │   │   ├── send.html             # 发送页面
 │   │   ├── download.html         # 单文件下载
 │   │   ├── bundle_multi.html     # 多文件下载
 │   │   ├── i18n.js               # 手机端多语言
 │   │   └── fonts/                # Font Awesome（手机端）
-│   ├── src/                      # Rust 源码 · Rust Source
+│   ├── src/                      # Rust 源码
 │   │   ├── main.rs               # 入口
 │   │   ├── lib.rs                # 应用初始化、Tauri 命令注册、托盘
 │   │   ├── http.rs               # HTTP 服务器、路由、上传/下载处理
@@ -127,6 +141,8 @@ Su/
 ## 贡献者
 
 [![Contributors](https://contrib.rocks/image?repo=Hunter-Lies/Su)](https://github.com/Hunter-Lies/Su/graphs/contributors)
+
+欢迎提交 Issue 和 PR！
 
 ## 许可证
 
