@@ -1,81 +1,359 @@
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><link rel="stylesheet" href="/fonts/all.min.css">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Su!</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f4f2;display:flex;justify-content:center;height:100dvh;padding:16px 16px max(16px,env(safe-area-inset-bottom));overflow:hidden}
-.c{width:100%;max-width:400px;display:flex;flex-direction:column;gap:14px;padding-top:16px;min-height:0;flex:1}
-.hdr{display:flex;align-items:center;gap:12px}
-.hdr .t{font-size:19px;font-weight:700;color:#1a1a1a}
-.iw{width:48px;height:48px;background:rgba(0,0,0,.06);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#1a1a1a}
-.btop{display:flex;align-items:center;gap:8px;padding:0;border:none;background:#1a1a1a;color:#fff;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;overflow:hidden}
-.btop:active{opacity:.85}
-.btop-main{flex:1;padding:12px 14px;display:flex;align-items:center;justify-content:center;gap:6px}
-.btop-cb{display:flex;align-items:center;gap:5px;padding:12px 10px;border-left:1px solid rgba(255,255,255,.2);font-size:12px;font-weight:400;white-space:nowrap}
-.btop-cb input{width:15px;height:15px;accent-color:#fff}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1;min-height:0;overflow-y:auto;align-content:start;background:rgba(255,255,255,.75);border:2px solid #e8e5e0;border-radius:18px;padding:10px}
-.fcard{position:relative;background:rgba(255,255,255,.85);border:1px solid #e8e5e0;border-radius:14px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s}
-.fcard:has(.fcb:checked){border-color:#1a1a1a;background:rgba(255,255,255,.95)}
-.fcb{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
-.fcard-ck{position:absolute;top:6px;right:6px;z-index:1;color:#bbb;font-size:18px}
-.fcard-ck .fa-circle-check{display:none;color:#1a1a1a}
-.fcard-ck .fa-circle{display:inline}
-.fcard:has(.fcb:checked) .fcard-ck .fa-circle{display:none}
-.fcard:has(.fcb:checked) .fcard-ck .fa-circle-check{display:inline}
-.fcard-body{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%}
-.fcard-icon{width:40px;height:40px;background:rgba(0,0,0,.06);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#999;font-size:20px}
-.fcard-name{font-size:12px;font-weight:500;color:#1a1a1a;text-align:center;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all;line-height:1.3;width:100%}
-.fcard-size{font-size:11px;color:#999}
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/fonts/all.min.css" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Su!</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+          sans-serif;
+        background: #f5f4f2;
+        display: flex;
+        justify-content: center;
+        height: 100dvh;
+        padding: 16px 16px max(16px, env(safe-area-inset-bottom));
+        overflow: hidden;
+      }
+      .c {
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding-top: 16px;
+        min-height: 0;
+        flex: 1;
+      }
+      .hdr {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .hdr .t {
+        font-size: 19px;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+      .iw {
+        width: 48px;
+        height: 48px;
+        background: rgba(0, 0, 0, 0.06);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #1a1a1a;
+      }
+      .btop {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        border: none;
+        background: #1a1a1a;
+        color: #fff;
+        border-radius: 13px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        overflow: hidden;
+      }
+      .btop:active {
+        opacity: 0.85;
+      }
+      .btop-main {
+        flex: 1;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btop-cb {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 12px 10px;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 12px;
+        font-weight: 400;
+        white-space: nowrap;
+      }
+      .btop-cb input {
+        width: 15px;
+        height: 15px;
+        accent-color: #fff;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        align-content: start;
+        background: rgba(255, 255, 255, 0.75);
+        border: 2px solid #e8e5e0;
+        border-radius: 18px;
+        padding: 10px;
+      }
+      .fcard {
+        position: relative;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid #e8e5e0;
+        border-radius: 14px;
+        padding: 14px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: border-color 0.15s;
+      }
+      .fcard:has(.fcb:checked) {
+        border-color: #1a1a1a;
+        background: rgba(255, 255, 255, 0.95);
+      }
+      .fcb {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+      }
+      .fcard-ck {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        z-index: 1;
+        color: #bbb;
+        font-size: 18px;
+      }
+      .fcard-ck .fa-circle-check {
+        display: none;
+        color: #1a1a1a;
+      }
+      .fcard-ck .fa-circle {
+        display: inline;
+      }
+      .fcard:has(.fcb:checked) .fcard-ck .fa-circle {
+        display: none;
+      }
+      .fcard:has(.fcb:checked) .fcard-ck .fa-circle-check {
+        display: inline;
+      }
+      .fcard-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+      }
+      .fcard-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.06);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 20px;
+      }
+      .fcard-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: #1a1a1a;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        line-height: 1.3;
+        width: 100%;
+      }
+      .fcard-size {
+        font-size: 11px;
+        color: #999;
+      }
 
-@media(prefers-color-scheme:dark){
-body{background:#1c1c1e}
-.hdr .t{color:#e8e8ec}
-.iw{background:rgba(255,255,255,.1);color:#e8e8ec}
-.grid{background:rgba(255,255,255,.04);border-color:#2e2e32}
-.fcard{background:rgba(255,255,255,.06);border-color:#2e2e32}
-.fcard:has(.fcb:checked){border-color:#e8e8ec;background:rgba(255,255,255,.08)}
-.fcard-name{color:#e8e8ec}
-.fcard-size{color:#888}
-.fcard-icon{background:rgba(255,255,255,.1);color:#aaa}
-.fcard-ck{color:#888}
-.fcard-ck .fa-circle-check{color:#e8e8ec}
-.btop{background:#e8e8ec;color:#1c1c1e}
-.btop-cb{border-left-color:rgba(0,0,0,.15)}
-.btop-cb input{accent-color:#1a1a1a}
-}
-</style></head>
-<body><div class="c">
-<div class="hdr"><div class="iw"><i class="fa-solid fa-download" style="font-size:22px"></i></div><div class="t" id="page-title"></div></div>
-<div class="grid">{items}</div>
-<div class="btop" id="btop"><div class="btop-main" id="btop-main"><i class="fa-solid fa-download"></i> <span id="btop-label" data-i18n="mobile_download_selected">下载选中</span></div><label class="btop-cb"><input type="checkbox" id="chk-all" checked> <span data-i18n="mobile_select_all">全选</span></label></div>
-</div>
-<script>
-var cbs=document.querySelectorAll(".fcb"),all=document.getElementById("chk-all"),btn=document.getElementById("btop-main"),label=document.getElementById("btop-label");
-all.addEventListener("change",function(){cbs.forEach(function(cb){cb.checked=all.checked});updateBtn()});
-cbs.forEach(function(cb){cb.addEventListener("change",updateBtn)});
-function updateBtn(){var checked=document.querySelectorAll(".fcb:checked"),n=checked.length,total=document.querySelectorAll(".fcb");label.textContent=SU.t("mobile_selected_n").replace("{n}",n);btn.style.opacity=n===0?".4":"1";all.checked=n===total.length}
-btn.addEventListener("click",function(){
-  var checked=document.querySelectorAll(".fcb:checked");
-  if(checked.length===0)return;
-  btn.style.opacity=".5";btn.style.pointerEvents="none";label.textContent=SU.t("mobile_downloading");
-  var urls=[];var names=[];checked.forEach(function(cb){urls.push(cb.dataset.url);names.push(cb.dataset.name||"")});
-  downloadSeq(urls,names,0);
-});
-function downloadSeq(urls,names,i){
-  if(i>=urls.length){btn.style.opacity="1";btn.style.pointerEvents="auto";updateBtn();return}
-  var a=document.createElement("a");a.href=urls[i];a.download=names[i]||"";a.style.display="none";document.body.appendChild(a);a.click();document.body.removeChild(a);
-  setTimeout(function(){downloadSeq(urls,names,i+1)},600);
-}
-cbs.forEach(function(cb){cb.checked=true});updateBtn();
-var wakeLock=null;async function keepAwake(){try{if("wakeLock"in navigator)wakeLock=await navigator.wakeLock.request("screen")}catch(e){}var v=document.createElement("video");v.setAttribute("playsinline","");v.setAttribute("muted","");v.setAttribute("loop","");v.style.display="none";v.src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMWlzbWF2ZTAwMG1kYXRhAAAAAG+AAABAAAH+AAABAAABAAAAAgAAU29mdHdhcmU6IExpYnJlT2ZmaWNlL0xpYnJlT2ZmaWNlSW1wcmVzIDEuMC4wAHhyZWY6MS4wADI3LjEuMS44OQAAdXJsOm1lZGlhaW5mbzpzY2VuZTpzaWxlbnQAZnR5cDpzb2Z0d2FyZV9zaW11bGF0aW9uAAB42mNgZGBg3M/AAAKMDAz/GRgZGP+LMDAyMACx0RxvmBgYGUHAyMDwH0g/AwI+AAAHUwCzAAAA";document.body.appendChild(v);v.play().catch(function(){})}document.body.addEventListener("click",keepAwake,{once:true})
-</script><script src="/i18n.js"></script>
-<script>
-window.__SU_LANG = SU.detectLang(window.__SU_LANG);
-SU.applyI18n();
-var cnt = __CNT__;
-document.getElementById("page-title").textContent = cnt + " " + SU.t("files_count");
-document.title = cnt + " " + SU.t("files_count") + " - Su!";
-updateBtn();
-</script>
-</body></html>
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #1c1c1e;
+        }
+        .hdr .t {
+          color: #e8e8ec;
+        }
+        .iw {
+          background: rgba(255, 255, 255, 0.1);
+          color: #e8e8ec;
+        }
+        .grid {
+          background: rgba(255, 255, 255, 0.04);
+          border-color: #2e2e32;
+        }
+        .fcard {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: #2e2e32;
+        }
+        .fcard:has(.fcb:checked) {
+          border-color: #e8e8ec;
+          background: rgba(255, 255, 255, 0.08);
+        }
+        .fcard-name {
+          color: #e8e8ec;
+        }
+        .fcard-size {
+          color: #888;
+        }
+        .fcard-icon {
+          background: rgba(255, 255, 255, 0.1);
+          color: #aaa;
+        }
+        .fcard-ck {
+          color: #888;
+        }
+        .fcard-ck .fa-circle-check {
+          color: #e8e8ec;
+        }
+        .btop {
+          background: #e8e8ec;
+          color: #1c1c1e;
+        }
+        .btop-cb {
+          border-left-color: rgba(0, 0, 0, 0.15);
+        }
+        .btop-cb input {
+          accent-color: #1a1a1a;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="c">
+      <div class="hdr">
+        <div class="iw">
+          <i class="fa-solid fa-download" style="font-size: 22px"></i>
+        </div>
+        <div class="t" id="page-title"></div>
+      </div>
+      <div class="grid">{items}</div>
+      <div class="btop" id="btop">
+        <div class="btop-main" id="btop-main">
+          <i class="fa-solid fa-download"></i>
+          <span id="btop-label" data-i18n="mobile_download_selected"
+            >下载选中</span
+          >
+        </div>
+        <label class="btop-cb"
+          ><input type="checkbox" id="chk-all" checked />
+          <span data-i18n="mobile_select_all">全选</span></label
+        >
+      </div>
+    </div>
+    <script>
+      var cbs = document.querySelectorAll(".fcb"),
+        all = document.getElementById("chk-all"),
+        btn = document.getElementById("btop-main"),
+        label = document.getElementById("btop-label");
+      all.addEventListener("change", function () {
+        cbs.forEach(function (cb) {
+          cb.checked = all.checked;
+        });
+        updateBtn();
+      });
+      cbs.forEach(function (cb) {
+        cb.addEventListener("change", updateBtn);
+      });
+      function updateBtn() {
+        var checked = document.querySelectorAll(".fcb:checked"),
+          n = checked.length,
+          total = document.querySelectorAll(".fcb");
+        label.textContent = SU.t("mobile_selected_n").replace("{n}", n);
+        btn.style.opacity = n === 0 ? ".4" : "1";
+        all.checked = n === total.length;
+      }
+      btn.addEventListener("click", function () {
+        var checked = document.querySelectorAll(".fcb:checked");
+        if (checked.length === 0) return;
+        btn.style.opacity = ".5";
+        btn.style.pointerEvents = "none";
+        label.textContent = SU.t("mobile_downloading");
+        var urls = [];
+        var names = [];
+        checked.forEach(function (cb) {
+          urls.push(cb.dataset.url);
+          names.push(cb.dataset.name || "");
+        });
+        downloadSeq(urls, names, 0);
+      });
+      function downloadSeq(urls, names, i) {
+        if (i >= urls.length) {
+          btn.style.opacity = "1";
+          btn.style.pointerEvents = "auto";
+          updateBtn();
+          return;
+        }
+        var a = document.createElement("a");
+        a.href = urls[i];
+        a.download = names[i] || "";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () {
+          downloadSeq(urls, names, i + 1);
+        }, 600);
+      }
+      cbs.forEach(function (cb) {
+        cb.checked = true;
+      });
+      updateBtn();
+      var wakeLock = null;
+      async function keepAwake() {
+        try {
+          if ("wakeLock" in navigator)
+            wakeLock = await navigator.wakeLock.request("screen");
+        } catch (e) {}
+        var v = document.createElement("video");
+        v.setAttribute("playsinline", "");
+        v.setAttribute("muted", "");
+        v.setAttribute("loop", "");
+        v.style.display = "none";
+        v.src =
+          "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMWlzbWF2ZTAwMG1kYXRhAAAAAG+AAABAAAH+AAABAAABAAAAAgAAU29mdHdhcmU6IExpYnJlT2ZmaWNlL0xpYnJlT2ZmaWNlSW1wcmVzIDEuMC4wAHhyZWY6MS4wADI3LjEuMS44OQAAdXJsOm1lZGlhaW5mbzpzY2VuZTpzaWxlbnQAZnR5cDpzb2Z0d2FyZV9zaW11bGF0aW9uAAB42mNgZGBg3M/AAAKMDAz/GRgZGP+LMDAyMACx0RxvmBgYGUHAyMDwH0g/AwI+AAAHUwCzAAAA";
+        document.body.appendChild(v);
+        v.play().catch(function () {});
+      }
+      document.body.addEventListener("click", keepAwake, { once: true });
+    </script>
+    <script src="/i18n.js"></script>
+    <script>
+      window.__SU_LANG = SU.detectLang(window.__SU_LANG);
+      SU.applyI18n();
+      var cnt = __CNT__;
+      document.getElementById("page-title").textContent =
+        cnt + " " + SU.t("files_count");
+      document.title = cnt + " " + SU.t("files_count") + " - Su!";
+      updateBtn();
+    </script>
+  </body>
+</html>
