@@ -132,7 +132,7 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .manage(app_state)
         .invoke_handler(tauri::generate_handler![
-            commands::share_files, commands::get_server_info, commands::stop_share,
+            commands::show_notification, commands::share_files, commands::get_server_info, commands::stop_share,
             commands::clear_all_shares, commands::clear_received, commands::generate_qr,
             commands::pick_files, commands::get_send_qr, commands::pick_folder,
             #[cfg(target_os = "windows")] commands::create_shortcut, commands::resize_window, commands::minimize_window,
