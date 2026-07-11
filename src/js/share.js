@@ -35,6 +35,7 @@ async function openQrModal(file) {
   qrModal.classList.remove("hidden");
   var qrDataUrl = await getQrDataUrl(file.url, 512);
   var hasMultiple = file.files && file.files.length > 1;
+  if (hasMultiple) { file.name = file.files.length + ' ' + t('files_count'); }
   var modalCard = qrModal.querySelector(".modal-card");
   if (hasMultiple) {
     modalCard.classList.add("modal-multi");
