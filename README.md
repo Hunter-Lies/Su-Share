@@ -113,7 +113,7 @@ MIT License — 详见 [LICENSE](LICENSE)
 
 ## 贡献者
 
-<a href="https://github.com/Hunter-Lies/Su/graphs/contributors"><img src="https://contrib.rocks/image?repo=Hunter-Lies/Su" /></a>
+[![Contributors](https://contrib.rocks/image?repo=Hunter-Lies/Su)](https://github.com/Hunter-Lies/Su/graphs/contributors)
 
 ## 作者
 
