@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "tauri dev",
         "build": "tauri build",
-        "prebuild": "python src-tauri/web/i18n/build.py",
+        "prebuild": "python src-tauri/web/i18n/build.py || echo i18n not rebuilt",
         "tauri": "npm run prebuild && tauri"
     },
     "devDependencies": {
