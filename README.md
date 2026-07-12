@@ -144,66 +144,6 @@ npm run tauri build -- --target i686-pc-windows-msvc  # 构建 32 位
 
 构建产物在 `src-tauri/target/release/` 下。
 
-## 项目结构
-
-```
-Su/
-├── src/                          # 桌面前端
-│   ├── index.html                # 主窗口
-│   ├── css/
-│   │   └── styles.css            # 全部样式
-│   ├── js/                       # JavaScript 模块
-│   │   ├── main.js               # 入口
-│   │   ├── i18n.js               # 多语言 (zh-CN/zh-TW/en/ja/ko)
-│   │   ├── state.js              # DOM 引用与应用状态
-│   │   ├── utils.js              # Toast、剪贴板、二维码工具
-│   │   ├── settings.js           # 设置页面
-│   │   ├── share.js              # 文件分享 UI
-│   │   ├── received.js           # 接收记录 UI
-│   │   └── theme.js              # 主题与外观
-│   └── assets/
-│       └── fonts/                # Font Awesome 6（本地）
-├── src-tauri/                    # Rust 后端
-│   ├── Cargo.toml                # Rust 依赖
-│   ├── tauri.conf.json           # Tauri 配置
-│   ├── build.rs                  # 构建脚本
-│   ├── capabilities/
-│   │   └── default.json          # Tauri 权限
-│   ├── icons/                    # 应用图标
-│   ├── sounds/                   # 提示音文件 (mp3)
-│   ├── web/                      # 手机端页面
-│   │   ├── send.html             # 发送页面
-│   │   ├── download.html         # 单文件下载
-│   │   ├── bundle_multi.html     # 多文件下载
-│   │   ├── i18n.js               # 手机端多语言
-│   │   └── fonts/                # Font Awesome（手机端）
-│   ├── src/                      # Rust 源码
-│   │   ├── main.rs               # 入口
-│   │   ├── lib.rs                # 应用初始化、Tauri 命令注册、托盘
-│   │   ├── http.rs               # HTTP 服务器、路由、上传/下载处理
-│   │   ├── commands.rs           # Tauri 命令（文件操作、设置、右键菜单）
-│   │   ├── state.rs              # 应用状态与持久化（JSON）
-│   │   ├── sound.rs              # 音效播放
-│   │   ├── qr.rs                 # 二维码生成
-│   │   ├── com_shellext.rs       # Windows 右键菜单扩展
-│   │   └── utils.rs              # 工具函数（MIME、格式化、响应）
-│   ├── AppxManifest.xml          # Windows 右键菜单注册清单
-│   ├── register_sparse.ps1       # 右键菜单注册脚本
-│   └── unregister_sparse.ps1     # 右键菜单卸载脚本
-├── package.json                  # Node 依赖
-├── logo.png                      # Logo
-├── screenshot.png                # 截图
-├── README.md                     # 中文说明（默认）
-├── README_en.md                  # 英文说明
-└── LICENSE                       # MIT 许可证
-```
-
-## 贡献者
-
-[![Contributors](https://contrib.rocks/image?repo=Hunter-Lies/Su-Share)](https://github.com/Hunter-Lies/Su-Share/graphs/contributors)
-
-欢迎提交 Issue 和 PR！
-
 ## 许可证
 
 MIT — 详见 [LICENSE](LICENSE)
