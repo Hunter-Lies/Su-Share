@@ -145,48 +145,6 @@ Su/
 
 Issues and PRs welcome!
 
-## Directory Structure
-
-```
-Su-Share/
-├── package.json
-├── logo.png
-├── screenshot.png
-├── src/
-│   ├── index.html                    # Desktop UI shell
-│   ├── pages/                        # Dynamic page fragments
-│   │   ├── share.html / received.html / settings.html
-│   │   └── settings-*.html           # Settings sub-pages
-│   ├── js/                           # Frontend logic
-│   │   ├── main.js / settings.js / share.js / received.js
-│   │   ├── theme.js / state.js / utils.js
-│   │   └── i18n/                     # 5-language support
-│   ├── css/styles.css
-│   └── assets/fonts/
-├── src-tauri/
-│   ├── src/                          # Rust backend
-│   │   ├── main.rs / lib.rs / commands.rs
-│   │   ├── http.rs / state.rs / sound.rs / qr.rs / utils.rs
-│   │   └── com_shellext.rs           # Context menu (Windows)
-│   ├── web/                          # Mobile HTML pages
-│   │   ├── send.html / download.html / bundle_multi.html
-│   │   ├── i18n.js / fonts/
-│   ├── Cargo.toml
-│   └── tauri.conf.json
-├── README.md / README_en.md
-├── CHANGELOG.md
-└── LICENSE
-```
-
-
-
-
-## Contributors
-
-<a href="https://github.com/Hunter-Lies/Su-Share/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Hunter-Lies/Su-Share" />
-</a>
-
 ## License
 
 MIT — see [LICENSE](LICENSE)
