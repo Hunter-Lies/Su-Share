@@ -451,9 +451,6 @@
       <button class="btn btn-p" id="retryBtn" data-i18n="mobile_continue">
         Continue
       </button>
-      <button class="btn btn-s" id="backBtn" data-i18n="mobile_back">
-        Back
-      </button>
     </div>
 
     <script>
@@ -479,8 +476,7 @@
       var pf = document.getElementById("pf"),
         spct = document.getElementById("spct"),
         sspd = document.getElementById("sspd");
-      var retryBtn = document.getElementById("retryBtn"),
-        backBtn = document.getElementById("backBtn");
+      var retryBtn = document.getElementById("retryBtn");
       var doneT = document.getElementById("done-t"),
         doneD = document.getElementById("done-d");
 
@@ -543,25 +539,48 @@
       });
 
       ab.addEventListener("click", function () {
-        if (files.length === 0) return;
+        if (files.length === 0 || state !== "idle") return;
+        ab.disabled = true;
         showPage("send");
         state = "sending";
-        // Signal total file count to backend
-        var startXhr = new XMLHttpRequest();
-        startXhr.open("POST", "/upload-start", false);
-        startXhr.send("" + files.length);
-        var currentIdx = 0,
-          totalSent = 0;
+        stt.textContent = SU.t("mobile_waiting");
+        std.textContent = "";
+        sticon.innerHTML = '<i class="fa-solid fa-clock"></i>';
+        pf.style.width = "0%";
+        spct.textContent = "";
+        sspd.textContent = "";
+        var currentIdx = 0, totalSent = 0, confirmed = false;
+        // Let browser paint the sending page before blocking on sync XHR
+        setTimeout(function() {
+        // Send /upload-start first (sync, but fast when auto_receive=true)
+        var sx = new XMLHttpRequest();
+        sx.open("POST", "/upload-start", false);
+        try { sx.send("" + files.length); confirmed = (sx.status === 200); }
+        catch(e) { confirmed = false; }
+        if (!confirmed) {
+          state = "idle";
+          stt.textContent = SU.t(sx.status === 403 ? "mobile_rejected" : "mobile_failed");
+          std.textContent = "";
+          sticon.innerHTML = '<i class="fa-solid fa-ban"></i>';
+          pf.style.width = "0%";
+          spct.textContent = "";
+          sspd.textContent = "";
+          if (sx.status === 403) setTimeout(function() { showPage("select"); }, 2000);
+          else showPage("select");
+          return;
+        }
         sticon.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
-        sendNext();
 
         function sendNext() {
           if (currentIdx >= files.length) {
+            var totalFiles = files.length;
+            files = [];
+            updateUI();
             state = "done";
             doneT.textContent = SU.t("mobile_sent");
             doneD.textContent = SU.t("mobile_sent_count")
               .replace("{n}", totalSent)
-              .replace("{t}", files.length);
+              .replace("{t}", totalFiles);
             showPage("done");
             return;
           }
@@ -644,6 +663,8 @@
           };
           xhr.send(f);
         }
+        sendNext();
+        }, 50);
       });
 
       cb.addEventListener("click", function () {
@@ -652,15 +673,14 @@
           xhr = null;
         }
         state = "idle";
-        showPage("select");
-      });
-
-      backBtn.addEventListener("click", function () {
-        state = "idle";
+        files = [];
+        updateUI();
+        ab.disabled = false;
         showPage("select");
       });
       retryBtn.addEventListener("click", function () {
         state = "idle";
+        ab.disabled = false;
         showPage("select");
         setTimeout(function () {
           ab.click();

@@ -470,6 +470,18 @@ fn handle_cli_forward(mut req: tiny_http::Request, state: &Arc<AppState>) -> (u6
         return (0, 400, "".into());
     }
     let paths: Vec<String> = body.lines().map(|s| s.to_string()).filter(|s| !s.is_empty()).collect();
+    // Check if this is a focus request
+    if paths.len() == 1 && paths[0] == "__focus__" {
+        println!("[Su!] cli focus: bringing window to front");
+        if let Some(app) = state.app_handle.lock().ok().and_then(|h| h.clone()) {
+            if let Some(w) = app.get_webview_window("main") {
+                let _ = w.show();
+                let _ = w.set_focus();
+            }
+        }
+        respond(req, 200, "text/plain", b"ok");
+        return (0, 200, "".into());
+    }
     println!("[Su!] cli forward: {} paths", paths.len());
     if paths.is_empty() {
         respond(req, 200, "text/plain", b"ok");

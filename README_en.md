@@ -23,12 +23,46 @@
 
 **Su!** is a lightweight LAN file transfer tool. No cloud, no login, no app install — scan a QR code and files fly between your phone and PC. Or right-click any file, generate a QR code, and your phone downloads it instantly.
 
+## Directory Structure
+
+```
+Su-Share/
+├── package.json
+├── logo.png
+├── screenshot.png
+├── src/
+│   ├── index.html                    # Desktop UI shell
+│   ├── pages/                        # Dynamic page fragments
+│   │   ├── share.html / received.html / settings.html
+│   │   └── settings-*.html           # Settings sub-pages
+│   ├── js/                           # Frontend logic
+│   │   ├── main.js / settings.js / share.js / received.js
+│   │   ├── theme.js / state.js / utils.js
+│   │   └── i18n/                     # 5-language support
+│   ├── css/styles.css
+│   └── assets/fonts/
+├── src-tauri/
+│   ├── src/                          # Rust backend
+│   │   ├── main.rs / lib.rs / commands.rs
+│   │   ├── http.rs / state.rs / sound.rs / qr.rs / utils.rs
+│   │   └── com_shellext.rs           # Context menu (Windows)
+│   ├── web/                          # Mobile HTML pages
+│   │   ├── send.html / download.html / bundle_multi.html
+│   │   ├── i18n.js / fonts/
+│   ├── Cargo.toml
+│   └── tauri.conf.json
+├── README.md / README_en.md
+├── CHANGELOG.md
+└── LICENSE
+```
+
+
 ## Download
 
 | Version | Link | For |
 |---------|------|-----|
-| 64-bit | [Su-v1.2.0-windows-x64.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.0-windows-x64.zip) | Modern Windows 10/11 |
-| 32-bit | [Su-v1.2.0-windows-x86.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.0-windows-x86.zip) | Legacy / 32-bit systems |
+| 64-bit | [Su-v1.2.1-windows-x64.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.1-windows-x64.zip) | Modern Windows 10/11 |
+| 32-bit | [Su-v1.2.1-windows-x86.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.1-windows-x86.zip) | Legacy / 32-bit systems |
 
 > Unzip and run `su.exe` — **no installation required**. If SmartScreen blocks it, click "More info" -> "Run anyway".
 >

@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Su!MARKER12345 - 局域网文件快传</title>
+    <title>Su! - 局域网文件快传</title>
     <link rel="stylesheet" href="assets/fonts/all.min.css" />
     <link rel="stylesheet" href="css/styles.css" />
     <script type="module" src="js/main.js" defer></script>
@@ -161,543 +161,7 @@
             </div>
           </nav>
         </aside>
-        <main class="main">
-          <div class="tab-content" id="tab-share">
-            <div class="cards">
-              <div class="card card-a">
-                <p class="cl" data-i18n="scan_send">扫码发送</p>
-                <div class="qrbox" id="send-qr-wrap">
-                  <span class="qrl" data-i18n="generating">生成中...</span>
-                </div>
-                <p class="ch">
-                  <code
-                    class="share-url"
-                    id="share-url"
-                    title="点击复制链接"
-                  ></code>
-                </p>
-              </div>
-              <div class="card card-b" id="drop-zone">
-                <i
-                  class="fa-solid fa-cloud-arrow-up dsvg"
-                  style="font-size: 36px; color: var(--t)"
-                ></i>
-                <p class="cl" data-i18n="share_to_phone">分享到手机</p>
-                <p class="ch">
-                  <span data-i18n="drop_hint">拖拽文件到此处，或</span
-                  ><span class="link" id="browse-link" data-i18n="browse_files"
-                    >选择文件</span
-                  >
-                </p>
-              </div>
-            </div>
-            <div class="slist">
-              <div class="slist-hd">
-                <span data-i18n="sharing">分享中</span
-                ><button id="clear-all-btn" data-i18n="clear_all">清空</button>
-              </div>
-              <div id="file-list" class="flist"></div>
-              <div id="empty-hint" class="ehint" data-i18n="no_shares">
-                暂无分享，拖入文件开始
-              </div>
-            </div>
-          </div>
-          <div class="tab-content hidden" id="tab-received">
-            <div class="received-wrap">
-              <div class="set-card set-info-card" style="margin-bottom: 16px">
-                <div class="set-info-icon">
-                  <i
-                    class="fa-solid fa-download"
-                    style="font-size: 22px; color: var(--bg2)"
-                  ></i>
-                </div>
-                <div class="set-info-text">
-                  <div class="set-info-name" data-i18n="received_title">
-                    接收记录
-                  </div>
-                  <div class="set-info-ver" data-i18n="received_desc">
-                    扫码发送的文件
-                  </div>
-                </div>
-              </div>
-              <div class="received-list" id="received-list">
-                <div class="received-empty" data-i18n="no_received">
-                  暂无接收记录
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="tab-content hidden" id="tab-settings">
-            <div class="settings-wrap" id="settings-main">
-              <div class="set-card set-info-card">
-                <div class="set-info-icon">
-                  <div
-                    style="
-                      width: 44px;
-                      height: 44px;
-                      background: var(--t);
-                      border-radius: 14px;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                    "
-                  >
-                    <i
-                      class="fa-solid fa-bolt"
-                      style="font-size: 26px; color: var(--bg2)"
-                    ></i>
-                  </div>
-                </div>
-                <div class="set-info-text">
-                  <div class="set-info-name">咻! Su!</div>
-                  <div class="set-info-ver">by HunterLies &middot; v1.2.0</div>
-                </div>
-                <div class="set-info-links">
-                  <a
-                    class="set-link-btn"
-                    href="https://htovo.com"
-                    target="_blank"
-                    title="官网"
-                    ><i class="fa-solid fa-globe"></i
-                  ></a>
-                  <a
-                    class="set-link-btn"
-                    href="https://space.bilibili.com/488494586"
-                    target="_blank"
-                    title="作者"
-                    ><i class="fa-solid fa-user"></i
-                  ></a>
-                </div>
-              </div>
-              <div class="set-group">
-                <div class="set-row set-row-split">
-                  <div>
-                    <div class="set-label" data-i18n="settings_language">
-                      语言
-                    </div>
-                    <div class="set-desc" data-i18n="lang_desc">
-                      选择界面显示语言
-                    </div>
-                  </div>
-                  <div class="set-dd" id="lang-dd">
-                    <button class="set-dd-btn" id="lang-dd-btn" type="button">
-                      <span id="lang-dd-label">简体中文</span
-                      ><svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        width="12"
-                        height="12"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
-                    </button>
-                    <div class="set-dd-menu" id="lang-dd-menu">
-                      <div class="set-dd-item" data-value="zh-CN">简体中文</div>
-                      <div class="set-dd-item" data-value="zh-TW">繁體中文</div>
-                      <div class="set-dd-item" data-value="en">English</div>
-                      <div class="set-dd-item" data-value="ja">日本語</div>
-                      <div class="set-dd-item" data-value="ko">한국어</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="set-group">
-                <div class="set-row set-row-split">
-                  <div>
-                    <div class="set-label" data-i18n="mobile_lang_label">
-                      接收端语言
-                    </div>
-                    <div class="set-desc" data-i18n="mobile_lang_desc">
-                      手机页面优先使用服务端语言
-                    </div>
-                  </div>
-                  <label class="set-toggle"
-                    ><input type="checkbox" id="mobile-lang-mode-toggle" /><span
-                      class="set-toggle-knob"
-                    ></span
-                  ></label>
-                </div>
-              </div>
-              <div class="set-nav-item" data-sub="software">
-                <div class="set-nav-left">
-                  <i class="fa-solid fa-laptop"></i
-                  ><span data-i18n="settings_software">软件</span>
-                </div>
-                <i class="fa-solid fa-chevron-right set-nav-arrow"></i>
-              </div>
-              <div class="set-nav-item" data-sub="security">
-                <div class="set-nav-left">
-                  <i class="fa-solid fa-shield-halved"></i
-                  ><span data-i18n="security_title">安全与隐私</span>
-                </div>
-                <i class="fa-solid fa-chevron-right set-nav-arrow"></i>
-              </div>
-              <div class="set-nav-item" data-sub="receive">
-                <div class="set-nav-left">
-                  <i class="fa-solid fa-download"></i
-                  ><span data-i18n="settings_receive">接收</span>
-                </div>
-                <i class="fa-solid fa-chevron-right set-nav-arrow"></i>
-              </div>
-              <div class="set-nav-item" data-sub="notification">
-                <div class="set-nav-left">
-                  <i class="fa-solid fa-bell"></i
-                  ><span data-i18n="settings_notification">通知</span>
-                </div>
-                <i class="fa-solid fa-chevron-right set-nav-arrow"></i>
-              </div>
-            </div>
-<div class="set-nav-item" data-sub="appearance">
-                <div class="set-nav-left">
-                  <i class="fa-solid fa-palette"></i
-                  ><span data-i18n="settings_appearance">外观</span>
-                </div>
-                <i class="fa-solid fa-chevron-right set-nav-arrow"></i>
-              </div>
-
-
-            <div class="settings-sub hidden" id="settings-sub-software">
-              <div class="set-sub-back">
-                <i class="fa-solid fa-chevron-left"></i
-                ><span data-i18n="settings_software">软件</span>
-              </div>
-              <div class="set-sub-body">
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="autostart">
-                        开机自启
-                      </div>
-                      <div class="set-desc" data-i18n="autostart_desc">
-                        系统启动时自动运行 Su!
-                      </div>
-                    </div>
-                    <label class="set-toggle"
-                      ><input type="checkbox" id="autostart-toggle" /><span
-                        class="set-toggle-knob"
-                      ></span
-                    ></label>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="tray_close">
-                        关闭到托盘
-                      </div>
-                      <div class="set-desc" data-i18n="tray_close_desc">
-                        点击关闭按钮时最小化到系统托盘
-                      </div>
-                    </div>
-                    <label class="set-toggle"
-                      ><input type="checkbox" id="tray-toggle" /><span
-                        class="set-toggle-knob"
-                      ></span
-                    ></label>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="desktop_shortcut">
-                        桌面快捷方式
-                      </div>
-                      <div class="set-desc" data-i18n="desktop_shortcut_desc">
-                        在桌面创建 Su! 快捷方式
-                      </div>
-                    </div>
-                    <button
-                      class="set-btn"
-                      id="shortcut-btn"
-                      data-i18n="create_btn"
-                    >
-                      创建
-                    </button>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="context_menu">
-                        右键菜单
-                      </div>
-                      <div class="set-desc" data-i18n="context_menu_desc">
-                        在文件右键菜单显示"通过 Su! 分享"
-                      </div>
-                    </div>
-                    <button
-                      class="set-btn"
-                      id="context-menu-btn"
-                      data-i18n="register_btn"
-                    >
-                      注册
-                    </button>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="reset_defaults">
-                        还原默认设置
-                      </div>
-                      <div class="set-desc" data-i18n="reset_defaults_desc">
-                        将所有设置恢复为初始状态
-                      </div>
-                    </div>
-                    <button
-                      class="set-btn"
-                      id="reset-defaults-btn"
-                      style="color: #e55; border-color: #e55"
-                      data-i18n="reset_btn"
-                    >
-                      还原
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-sub hidden" id="settings-sub-security">
-              <div class="set-sub-back">
-                <i class="fa-solid fa-chevron-left"></i
-                ><span data-i18n="security_title">安全与隐私</span>
-              </div>
-              <div class="set-sub-body">
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="auto_receive_title">自动接收</div>
-                      <div class="set-desc" data-i18n="auto_receive_desc">自动接收文件，无需确认</div>
-                    </div>
-                    <label class="set-toggle">
-                      <input type="checkbox" id="auto-receive-toggle" checked />
-                      <span class="set-toggle-knob"></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-sub hidden" id="settings-sub-receive">
-              <div class="set-sub-back">
-                <i class="fa-solid fa-chevron-left"></i
-                ><span data-i18n="settings_receive">接收</span>
-              </div>
-              <div class="set-sub-body">
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="receive_dir">
-                        接收目录
-                      </div>
-                      <div class="set-desc" data-i18n="receive_dir_desc">
-                        手机发送到电脑的文件保存位置
-                      </div>
-                    </div>
-                    <button
-                      class="set-btn"
-                      id="pick-dir-btn"
-                      data-i18n="change_dir"
-                    >
-                      更改
-                    </button>
-                  </div>
-                  <div class="set-path" id="downloads-dir">C:\Users\...</div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="clear_received">
-                        关闭时清除接收记录
-                      </div>
-                      <div class="set-desc" data-i18n="clear_received_desc">
-                        关闭应用时自动删除接收记录（文件保留）
-                      </div>
-                    </div>
-                    <label class="set-toggle"
-                      ><input type="checkbox" id="clear-received-toggle" /><span
-                        class="set-toggle-knob"
-                      ></span
-                    ></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-sub hidden" id="settings-sub-notification">
-              <div class="set-sub-back">
-                <i class="fa-solid fa-chevron-left"></i
-                ><span data-i18n="settings_notification">通知</span>
-              </div>
-              <div class="set-sub-body">
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="notif_sound">
-                        通知声音
-                      </div>
-                      <div class="set-desc" data-i18n="notif_sound_desc">
-                        收到文件时播放提示音
-                      </div>
-                    </div>
-                    <label class="set-toggle"
-                      ><input type="checkbox" id="sound-toggle" /><span
-                        class="set-toggle-knob"
-                      ></span
-                    ></label>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="sound_type">提示音</div>
-                      <div class="set-desc" data-i18n="sound_type_desc">
-                        选择收到文件时的音效
-                      </div>
-                    </div>
-                    <div class="set-dd" id="sound-dd">
-                      <button
-                        class="set-dd-btn"
-                        id="sound-dd-btn"
-                        type="button"
-                      >
-                        <span id="sound-dd-label">投递</span
-                        ><svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          width="12"
-                          height="12"
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </button>
-                      <div class="set-dd-menu" id="sound-dd-menu">
-                        <div class="set-dd-item" data-value="投递">投递</div>
-                        <div class="set-dd-item" data-value="啵">啵</div>
-                        <div class="set-dd-item" data-value="WhatsApp">
-                          WhatsApp
-                        </div>
-                        <div class="set-dd-item" data-value="太空狼人杀">
-                          太空狼人杀
-                        </div>
-                        <div class="set-dd-item" data-value="皮克通恩">
-                          皮克通恩
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="notif_popup">
-                        收到文件弹窗
-                      </div>
-                      <div class="set-desc" data-i18n="notif_popup_desc">
-                        收到文件时弹出卡片提示
-                      </div>
-                    </div>
-                    <label class="set-toggle"
-                      ><input type="checkbox" id="popup-toggle" checked /><span
-                        class="set-toggle-knob"
-                      ></span
-                    ></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-<div class="settings-sub hidden" id="settings-sub-appearance">
-              <div class="set-sub-back">
-                <i class="fa-solid fa-chevron-left"></i
-                ><span data-i18n="settings_appearance">外观</span>
-              </div>
-
-              <div class="set-sub-body">
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="theme">主题</div>
-                      <div class="set-desc" data-i18n="theme_desc">
-                        经典样式或毛玻璃效果
-                      </div>
-                    </div>
-                    <div class="set-dd" id="style-dd">
-                      <button
-                        class="set-dd-btn"
-                        id="style-dd-btn"
-                        type="button"
-                      >
-                        <span id="style-dd-label">经典</span
-                        ><svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          width="12"
-                          height="12"
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </button>
-                      <div class="set-dd-menu" id="style-dd-menu">
-                        <div class="set-dd-item" data-value="classic">
-                          <span data-i18n="classic">经典</span>
-                        </div>
-                        <div class="set-dd-item" data-value="glass">
-                          <span data-i18n="glass">毛玻璃</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="set-group">
-                  <div class="set-row set-row-split">
-                    <div>
-                      <div class="set-label" data-i18n="appearance">外观</div>
-                      <div class="set-desc" data-i18n="appearance_desc">
-                        跟随系统或手动选择
-                      </div>
-                    </div>
-                    <div class="set-dd" id="theme-dd">
-                      <button
-                        class="set-dd-btn"
-                        id="theme-dd-btn"
-                        type="button"
-                      >
-                        <span id="theme-dd-label">浅色</span
-                        ><svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          width="12"
-                          height="12"
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </button>
-                      <div class="set-dd-menu" id="theme-dd-menu">
-                        <div class="set-dd-item" data-value="auto">
-                          <span data-i18n="auto">跟随系统</span>
-                        </div>
-                        <div class="set-dd-item" data-value="light">
-                          <span data-i18n="light">浅色</span>
-                        </div>
-                        <div class="set-dd-item" data-value="dark">
-                          <span data-i18n="dark">深色</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-          </div>
+        <main class="main" id="main-content">
         </main>
       </div>
     </div>
@@ -714,7 +178,19 @@
       </div>
     </div>
 
-    <div id="received-modal" class="modal hidden">
+    
+    <div id="upload-confirm-modal" class="modal hidden">
+      <div class="modal-bg"></div>
+      <div class="modal-card">
+        <h3 data-i18n="confirm_title">确认接收</h3>
+        <p id="confirm-body" style="color:var(--t2);font-size:14px;margin:0 0 20px"></p>
+        <div class="confirm-btns">
+          <button class="btn-reject" id="confirm-reject-btn" data-i18n="confirm_reject">拒绝</button>
+          <button class="btn-accept" id="confirm-accept-btn" data-i18n="confirm_accept">接收</button>
+        </div>
+      </div>
+    </div>
+<div id="received-modal" class="modal hidden">
       <div class="modal-bg"></div>
       <div class="modal-card">
         <button class="modal-x" id="received-modal-x">&times;</button>
@@ -746,5 +222,48 @@
     </div>
 
     <div id="toast" class="toast hidden"></div>
+      <div class="resize-handle n" data-dir="n"></div>
+    <div class="resize-handle e" data-dir="e"></div>
+    <div class="resize-handle s" data-dir="s"></div>
+    <div class="resize-handle w" data-dir="w"></div>
+    <div class="resize-handle ne" data-dir="ne"></div>
+    <div class="resize-handle nw" data-dir="nw"></div>
+    <div class="resize-handle se" data-dir="se"></div>
+    <div class="resize-handle sw" data-dir="sw"></div>
+    <script>
+      (function() {
+        if (!window.__TAURI__) return;
+        var handles = document.querySelectorAll('.resize-handle');
+        if (navigator.platform.indexOf('Win') !== 0) {
+          handles.forEach(function(h) { h.style.display = 'none'; });
+          return;
+        }
+        var invoke = window.__TAURI__.core.invoke;
+        var resizing = false, dir = null, startX, startY, startW, startH;
+        handles.forEach(function(h) {
+          h.addEventListener('mousedown', function(e) {
+            resizing = true;
+            dir = h.dataset.dir;
+            startX = e.screenX;
+            startY = e.screenY;
+            startW = window.outerWidth;
+            startH = window.outerHeight;
+            e.preventDefault();
+          });
+        });
+        document.addEventListener('mousemove', function(e) {
+          if (!resizing) return;
+          var dx = e.screenX - startX;
+          var dy = e.screenY - startY;
+          var newW = startW, newH = startH;
+          if (dir.indexOf('e') >= 0) newW = Math.max(680, startW + dx);
+          if (dir.indexOf('w') >= 0) newW = Math.max(680, startW - dx);
+          if (dir.indexOf('s') >= 0) newH = Math.max(440, startH + dy);
+          if (dir.indexOf('n') >= 0) newH = Math.max(440, startH - dy);
+          invoke('resize_window', { width: newW, height: newH }).catch(function(){});
+        });
+        document.addEventListener('mouseup', function() { resizing = false; dir = null; });
+      })();
+    </script>
   </body>
 </html>

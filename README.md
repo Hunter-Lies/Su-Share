@@ -23,12 +23,72 @@
 
 **Su!** 是一款轻量级局域网文件传输工具。无需云端、无需登录、无需安装 App——手机扫个码，文件就传到电脑上了。反过来，右键任意文件生成二维码，手机一扫就下走了。
 
+## 目录结构
+
+```
+Su-Share/
+├── package.json
+├── logo.png
+├── screenshot.png
+├── src/
+│   ├── index.html                    # 桌面端主界面
+│   ├── pages/                        # 动态加载的页面
+│   │   ├── share.html                # 文件分享页
+│   │   ├── received.html             # 接收记录页
+│   │   ├── settings.html             # 设置主页
+│   │   ├── settings-software.html    # 软件设置
+│   │   ├── settings-security.html    # 安全与隐私
+│   │   ├── settings-receive.html     # 接收设置
+│   │   ├── settings-notification.html# 通知设置
+│   │   └── settings-appearance.html  # 外观设置
+│   ├── js/
+│   │   ├── main.js                   # 入口
+│   │   ├── settings.js               # 设置页逻辑
+│   │   ├── share.js                  # 分享逻辑
+│   │   ├── received.js               # 接收逻辑
+│   │   ├── theme.js                  # 主题
+│   │   ├── state.js                  # 状态和DOM引用
+│   │   ├── utils.js                  # 工具函数
+│   │   └── i18n/
+│   │       ├── index.js
+│   │       ├── zh-CN.js / zh-TW.js / en.js / ja.js / ko.js
+│   ├── css/
+│   │   └── styles.css
+│   └── assets/
+│       └── fonts/                    # Font Awesome 本地字体
+├── src-tauri/
+│   ├── src/
+│   │   ├── main.rs                   # Rust入口
+│   │   ├── lib.rs                    # App构建和配置
+│   │   ├── commands.rs               # Tauri命令
+│   │   ├── http.rs                   # HTTP服务器（处理手机连接）
+│   │   ├── state.rs                  # 应用状态
+│   │   ├── sound.rs                  # 通知声音
+│   │   ├── qr.rs                     # 二维码生成
+│   │   ├── utils.rs                  # 工具
+│   │   └── com_shellext.rs           # 右键菜单注册（Windows）
+│   ├── web/                          # 手机端HTML页面
+│   │   ├── send.html                 # 发送页面
+│   │   ├── download.html             # 单文件下载页
+│   │   ├── bundle_multi.html         # 多文件下载页
+│   │   ├── auth.html / pickup.html   # 彩蛋
+│   │   ├── i18n.js                   # 手机端多语言
+│   │   └── fonts/                    # 手机端字体
+│   ├── Cargo.toml
+│   └── tauri.conf.json
+├── README.md
+├── README_en.md
+├── CHANGELOG.md
+└── LICENSE
+```
+
+
 ## 下载
 
 | 版本 | 下载 | 适用 |
 |------|------|------|
-| 64 位 | [Su-v1.2.0-windows-x64.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.0-windows-x64.zip) | 主流 Windows 10/11 |
-| 32 位 | [Su-v1.2.0-windows-x86.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.0-windows-x86.zip) | 老旧 / 32 位系统 |
+| 64 位 | [Su-v1.2.1-windows-x64.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.1-windows-x64.zip) | 主流 Windows 10/11 |
+| 32 位 | [Su-v1.2.1-windows-x86.zip](https://github.com/Hunter-Lies/Su-Share/releases/latest/download/Su-v1.2.1-windows-x86.zip) | 老旧 / 32 位系统 |
 
 > 解压后双击 `su.exe` 即可运行，**无需安装**。如遇 SmartScreen 拦截，点击「更多信息」→「仍要运行」。
 >

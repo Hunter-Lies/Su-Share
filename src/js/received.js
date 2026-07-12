@@ -1,7 +1,12 @@
-// received.js — received files list and modal
+// received.js - received files list and modal
 import { invoke, listen } from './state.js';
 import { fmtSize, toast, esc } from './utils.js';
 import { t } from './i18n/index.js';
+
+var receivedInitialized = false;
+var currentConfirmAccept = null;
+var currentConfirmReject = null;
+var receivedObserver = null;
 
 function showReceivedModal(d) {
   var modal = document.getElementById("received-modal");
@@ -21,7 +26,73 @@ function showReceivedModal(d) {
     if (rt) rt.click();
   };
   x.onclick = close;
-  modal.querySelector(".modal-bg").onclick = close;
+  var bg = modal.querySelector(".modal-bg");
+  if (bg) bg.onclick = close;
+}
+
+function formatTime(ts) {
+  var d = new Date(ts);
+  if (!isNaN(d.getTime())) {
+    return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+  }
+  if (typeof ts === "string" && ts.length >= 16) return ts.substring(11, 16);
+  return ts || "";
+}
+
+function renderReceivedItem(item, isNew, index) {
+  var row = document.createElement("div");
+  row.className = "rcard" + (isNew ? " rcard-new" : "");
+  row.style.animationDelay = (index * 30) + "ms";
+
+  var icon = document.createElement("div");
+  icon.className = "rcard-icon";
+  icon.innerHTML = '<i class="fa-solid fa-file"></i>';
+
+  var info = document.createElement("div");
+  info.className = "rcard-info";
+  var name = document.createElement("div");
+  name.className = "rcard-name";
+  name.title = item.name;
+  name.textContent = item.name;
+  var meta = document.createElement("div");
+  meta.className = "rcard-meta";
+  meta.textContent = fmtSize(item.size);
+  info.appendChild(name);
+  info.appendChild(meta);
+
+  var time = document.createElement("div");
+  time.className = "rcard-time";
+  time.textContent = formatTime(item.time);
+
+  var openBtn = document.createElement("button");
+  openBtn.className = "rcard-btn";
+  openBtn.title = t("view_file");
+  openBtn.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
+  openBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (item.path) invoke('open_folder', { path: item.path }).catch(function() {});
+  });
+
+  row.appendChild(icon);
+  row.appendChild(info);
+  row.appendChild(time);
+  row.appendChild(openBtn);
+
+  row.addEventListener('dblclick', function() {
+    if (item.path) invoke('open_path', { path: item.path }).catch(function() {});
+  });
+  row.style.cursor = 'pointer';
+  return row;
+}
+
+function renderReceivedHeader(time, device, isLatest, index) {
+  var hdr = document.createElement("div");
+  hdr.className = "rcard-header" + (isLatest ? " rcard-header-latest" : "");
+  hdr.style.animationDelay = (index * 30) + "ms";
+  var label = time ? time.substring(0, 16) : "";
+  if (device) label += " " + t("received_from") + " " + device;
+  hdr.textContent = label;
+  return hdr;
 }
 
 function setupReceived() {
@@ -33,7 +104,12 @@ function setupReceived() {
       var items = await invoke("get_received_files");
       if (!receivedList) return;
       if (items.length === 0) {
-        receivedList.innerHTML = '<div class="received-empty" data-i18n="no_received">' + t("no_received") + '</div>';
+        receivedList.innerHTML = '';
+        var empty = document.createElement("div");
+        empty.className = "received-empty";
+        empty.dataset.i18n = "no_received";
+        empty.textContent = t("no_received");
+        receivedList.appendChild(empty);
         return;
       }
       receivedList.innerHTML = "";
@@ -48,98 +124,49 @@ function setupReceived() {
       });
       var batchNums = Object.keys(batches).map(Number).sort(function(a, b) { return b - a; });
 
-      function renderItem(item, isNew) {
-        var ts = item.time || "";
-        var d = new Date(ts);
-        var valid = !isNaN(d.getTime());
-        var shortTime = valid ? ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) : (ts.substring(11, 16) || ts);
-        var row = document.createElement("div");
-        row.className = "rcard" + (isNew ? " rcard-new" : "");
-        row.innerHTML =
-          '<div class="rcard-icon"><i class="fa-solid fa-file"></i></div>' +
-          '<div class="rcard-info">' +
-            '<div class="rcard-name" title="' + esc(item.name) + '">' + esc(item.name) + '</div>' +
-            '<div class="rcard-meta">' + fmtSize(item.size) + '</div>' +
-          '</div>' +
-          '<div class="rcard-time">' + shortTime + '</div>' +
-          '<button class="rcard-btn" data-path="' + esc(item.path || '') + '" title="打开文件夹"><i class="fa-solid fa-folder-open"></i></button>';
-        receivedList.appendChild(row);
-        row.querySelector('.rcard-btn').addEventListener('click', function(e) {
-          e.stopPropagation();
-          var p = this.dataset.path;
-          if (!p) return;
-          invoke('open_folder', { path: p }).catch(function() {});
-        });
-        row.addEventListener('dblclick', function(e) {
-          var p = this.querySelector('.rcard-btn');
-          if (p && p.dataset.path) invoke('open_path', { path: p.dataset.path }).catch(function() {});
-        });
-        row.style.cursor = 'pointer';
-      }
-
+      var idx = 0;
       batchNums.forEach(function(bn) {
         var isLatest = bn === maxBatch;
         var files = batches[bn];
         var hdrTime = (files[0].time || "").substring(0, 16);
-        var hdr = document.createElement("div");
-        hdr.className = "rcard-header" + (isLatest ? " rcard-header-latest" : "");
-        var deviceLabel = (files[0].device || "");
-        if (deviceLabel) hdrTime += " " + t("received_from") + " " + deviceLabel;
-        hdr.textContent = hdrTime;
-        receivedList.appendChild(hdr);
-        files.forEach(function(item) { renderItem(item, isLatest); });
+        var deviceLabel = files[0].device || "";
+        receivedList.appendChild(renderReceivedHeader(hdrTime, deviceLabel, isLatest, idx++));
+        files.forEach(function(item) { receivedList.appendChild(renderReceivedItem(item, isLatest, idx++)); });
       });
     } catch (e) { console.error("[Su!] refreshReceived error:", e); }
   };
 
-  listen("file-received", function(event) {
-    console.log("[Su!] file-received event:", event.payload);
-    window.refreshReceivedGlobal();
-  }).catch(function(e) {
-    console.error("[Su!] listen file-received failed:", e);
-  });
+  if (!receivedInitialized) {
+    receivedInitialized = true;
 
-  listen("upload-requested", function(event) {
-    console.log("[Su!] upload-requested:", event.payload);
-    try {
+    listen("file-received", function(event) {
+      console.log("[Su!] file-received event:", event.payload);
+      if (typeof window.refreshReceivedGlobal === "function") window.refreshReceivedGlobal();
+    }).catch(function(e) {
+      console.error("[Su!] listen file-received failed:", e);
+    });
+
+    listen("batch-complete", function(event) {
+      console.log("[Su!] batch-complete event:", event.payload);
       var d = event.payload;
-      var modal = document.getElementById("upload-confirm-modal");
-      var body = document.getElementById("confirm-body");
-      var acceptBtn = document.getElementById("confirm-accept-btn");
-      var rejectBtn = document.getElementById("confirm-reject-btn");
-      if (!modal) return;
-      body.textContent = t("received_from") + " " + (d.device || t("unknown_device")) + " \u00b7 " + d.count + " " + t("files_count");
-      modal.classList.remove("hidden");
-      function respond(accepted) {
-        modal.classList.add("hidden");
-        acceptBtn.onclick = null;
-        rejectBtn.onclick = null;
-        invoke("confirm_upload", { id: d.id, accepted: accepted }).catch(function(){});
+      if (d && localStorage.getItem("su-popup-enabled") !== "false") {
+        showReceivedModal(d);
       }
-      acceptBtn.onclick = function() { respond(true); };
-      rejectBtn.onclick = function() { respond(false); };
-    } catch(e) { console.error("[Su!] upload-requested error:", e); }
-  });
-
-  listen("batch-complete", function(event) {
-    console.log("[Su!] batch-complete event:", event.payload);
-    var d = event.payload;
-    if (d && localStorage.getItem("su-popup-enabled") !== "false") {
-      showReceivedModal(d);
-    }
-  }).catch(function(e) {
-    console.error("[Su!] listen batch-complete failed:", e);
-  });
+      if (typeof window.refreshReceivedGlobal === "function") window.refreshReceivedGlobal();
+    }).catch(function(e) {
+      console.error("[Su!] listen batch-complete failed:", e);
+    });
+  }
 
   var receivedTab = document.querySelector('[data-tab="received"]');
-  if (receivedTab) {
-    var observer = new MutationObserver(function() {
-      if (receivedTab.classList.contains("active")) {
-        window.refreshReceivedGlobal();
-      }
-    });
-    observer.observe(receivedTab, { attributes: true, attributeFilter: ["class"] });
-  }
+  if (receivedTab && !receivedObserver) {
+    receivedObserver = new MutationObserver(function() {
+     if (receivedTab.classList.contains("active")) {
+       if (typeof window.refreshReceivedGlobal === "function") window.refreshReceivedGlobal();
+     }
+   });
+    receivedObserver.observe(receivedTab, { attributes: true, attributeFilter: ["class"] });
+ }
 
   if (typeof window.refreshReceivedGlobal === "function") window.refreshReceivedGlobal();
 }

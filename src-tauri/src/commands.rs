@@ -346,7 +346,7 @@ pub fn set_mobile_lang_mode(state: tauri::State<Arc<AppState>>, mode: String) {
 }
 
 #[tauri::command]
-pub fn confirm_upload(id: String, accepted: bool, state: tauri::State<'_, crate::state::AppState>) {
+pub fn confirm_upload(id: String, accepted: bool, state: tauri::State<Arc<AppState>>) {
     if let Ok(mut map) = state.pending_confirmations.lock() {
         if let Some(tx) = map.remove(&id) {
             let _ = tx.send(accepted);
@@ -355,12 +355,60 @@ pub fn confirm_upload(id: String, accepted: bool, state: tauri::State<'_, crate:
 }
 
 #[tauri::command]
-pub fn get_auto_receive(state: tauri::State<'_, crate::state::AppState>) -> bool {
+pub fn get_auto_receive(state: tauri::State<Arc<AppState>>) -> bool {
     state.auto_receive.lock().map(|g| *g).unwrap_or(true)
 }
 
 #[tauri::command]
-pub fn set_auto_receive(enable: bool, state: tauri::State<'_, crate::state::AppState>) {
+pub fn set_auto_receive(enable: bool, state: tauri::State<Arc<AppState>>) {
     *state.auto_receive.lock().unwrap() = enable;
+}
+
+#[tauri::command]
+pub fn get_auto_destroy(state: tauri::State<Arc<AppState>>) -> bool {
+    state.auto_destroy.lock().map(|g| *g).unwrap_or(false)
+}
+
+#[tauri::command]
+pub fn set_auto_destroy(enable: bool, state: tauri::State<Arc<AppState>>) {
+    *state.auto_destroy.lock().unwrap() = enable;
+    let path = state.data_dir.join("auto_destroy.cfg");
+    let _ = std::fs::write(&path, if enable { "1" } else { "0" });
+}
+
+use dirs;
+
+#[tauri::command]
+pub fn get_autostart(state: tauri::State<Arc<AppState>>) -> Result<bool, String> {
+    let path = state.data_dir.join("autostart.cfg");
+    Ok(path.exists() && std::fs::read_to_string(&path).map(|s| s.trim() == "1").unwrap_or(false))
+}
+
+
+#[tauri::command]
+pub fn is_context_menu_registered() -> bool {
+    let data_dir = dirs::data_local_dir().unwrap_or_else(|| std::path::PathBuf::from(".")).join("Su");
+    data_dir.join("ctx_registered.cfg").exists()
+}
+
+#[tauri::command]
+pub fn set_autostart(enable: bool, state: tauri::State<Arc<AppState>>) -> Result<(), String> {
+    let path = state.data_dir.join("autostart.cfg");
+    std::fs::write(&path, if enable { "1" } else { "0" }).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn read_page(name: String) -> Result<String, String> {
+    match name.as_str() {
+        "share" => Ok(include_str!("../../src/pages/share.html").to_string()),
+        "received" => Ok(include_str!("../../src/pages/received.html").to_string()),
+        "settings" => Ok(include_str!("../../src/pages/settings.html").to_string()),
+        "settings-software" => Ok(include_str!("../../src/pages/settings-software.html").to_string()),
+        "settings-security" => Ok(include_str!("../../src/pages/settings-security.html").to_string()),
+        "settings-receive" => Ok(include_str!("../../src/pages/settings-receive.html").to_string()),
+        "settings-notification" => Ok(include_str!("../../src/pages/settings-notification.html").to_string()),
+        "settings-appearance" => Ok(include_str!("../../src/pages/settings-appearance.html").to_string()),
+        _ => Err(format!("Unknown page: {}", name)),
+    }
 }
 

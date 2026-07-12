@@ -1,35 +1,43 @@
-// share.js — file sharing UI: drag-drop, QR modal, file cards
+// share.js - file sharing UI: drag-drop, QR modal, file cards
 import { invoke, listen, dropZone, fileList, emptyHint, clearAllBtn, qrModal, qrModalImg, qrModalName, qrModalUrl, qrModalCopy, sendQrWrap, settingsIp } from './state.js';
 import { fmtSize, toast, copyText, esc, getQrDataUrl } from './utils.js';
 import { t } from './i18n/index.js';
 
+var dragListenersReady = false;
+var modalListenersReady = false;
+
 function setupDragDrop() {
-  document.getElementById("browse-link").addEventListener("click", async function(e) {
-    e.stopPropagation();
-    try { var paths = await invoke("pick_files"); if (paths && paths.length) shareNow(paths); } catch (e) { toast(t("toast_pick_failed")); }
-  });
-  dropZone.addEventListener("click", async function() {
-    try { var paths = await invoke("pick_files"); if (paths && paths.length) shareNow(paths); } catch (e) { toast(t("toast_pick_failed")); }
-  });
-  listen("tauri://drag-enter", function() { dropZone.classList.add("drag-over"); });
-  listen("tauri://drag-leave", function() { dropZone.classList.remove("drag-over"); });
-  listen("tauri://drag-drop", function(event) {
-    dropZone.classList.remove("drag-over");
+  var browseLink = document.getElementById("browse-link");
+  if (browseLink) browseLink.addEventListener("click", async function(e) {
+   e.stopPropagation();
+   try { var paths = await invoke("pick_files"); if (paths && paths.length) shareNow(paths); } catch (e) { toast(t("toast_pick_failed")); }
+ });
+ if (dropZone) dropZone.addEventListener("click", async function() {
+   try { var paths = await invoke("pick_files"); if (paths && paths.length) shareNow(paths); } catch (e) { toast(t("toast_pick_failed")); }
+ });
+  if (dragListenersReady) return;
+  dragListenersReady = true;
+ listen("tauri://drag-enter", function() { if (dropZone) dropZone.classList.add("drag-over"); });
+ listen("tauri://drag-leave", function() { if (dropZone) dropZone.classList.remove("drag-over"); });
+ listen("tauri://drag-drop", function(event) {
+    if (dropZone) dropZone.classList.remove("drag-over");
     var paths = event.payload.paths || [];
     if (paths.length) shareNow(paths);
   });
 }
 
 function setupModal() {
-  qrModal.querySelector(".modal-bg").addEventListener("click", closeModal);
-  qrModal.querySelector(".modal-x").addEventListener("click", closeModal);
-  qrModalCopy.addEventListener("click", function() { copyText(qrModalUrl.textContent).finally(function(){closeModal()}); });
+  if (!qrModal || modalListenersReady) return;
+  modalListenersReady = true;
+ var _bg = qrModal.querySelector(".modal-bg"); if (_bg) _bg.addEventListener("click", closeModal);
+  var _x = qrModal.querySelector(".modal-x"); if (_x) _x.addEventListener("click", closeModal);
+  if (qrModalCopy) qrModalCopy.addEventListener("click", function() { copyText(qrModalUrl.textContent).finally(function(){closeModal()}); });
 }
 
 function closeModal() { qrModal.classList.add("hidden"); }
 
 async function openQrModal(file) {
-  qrModalImg.innerHTML = '<div style="color:var(--t2);padding:40px;font-size:13px">生成中...</div>';
+  qrModalImg.innerHTML = '<div style="color:var(--t2);padding:40px;font-size:13px">' + t("generating") + '</div>';
   qrModalName.textContent = file.name;
   qrModalUrl.textContent = file.url;
   qrModal.classList.remove("hidden");
@@ -67,43 +75,94 @@ async function openQrModal(file) {
 }
 
 function setupClearAll() {
-  clearAllBtn.addEventListener("click", async function() {
+  if (clearAllBtn) clearAllBtn.addEventListener("click", async function() {
     await invoke("clear_all_shares");
-    fileList.innerHTML = "";
+    if (fileList) fileList.innerHTML = "";
     updateEmpty();
     toast(t("toast_cleared"));
   });
+}
+
+function createSvg(html) {
+  var wrap = document.createElement("span");
+  wrap.innerHTML = html;
+  return wrap.firstChild;
 }
 
 async function renderFileCard(file) {
   var c = document.createElement("div");
   c.className = "fcard";
   c.dataset.id = file.id;
+  c.style.animationDelay = "0ms";
   var showName = (file.files && file.files.length > 1) ? (file.files.length + " " + t("files_count")) : file.name;
-  c.innerHTML = '<div class="fqr fqr-icon"><i class="fa-solid fa-qrcode"></i></div><div class="fi"><div class="fn">' + esc(showName) + '</div><div class="fs">' + fmtSize(file.size) + '</div><div class="fu" title="点击复制">' + esc(file.url) + '</div></div><div class="fa"><button title="放大"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></button><button title="复制"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button><button class="danger" title="停止"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>';
+
+  var fqr = document.createElement("div");
+  fqr.className = "fqr fqr-icon";
+  fqr.innerHTML = '<i class="fa-solid fa-qrcode"></i>';
+
+  var fi = document.createElement("div");
+  fi.className = "fi";
+  var fn = document.createElement("div");
+  fn.className = "fn";
+  fn.textContent = showName;
+  fn.title = showName;
+  var fs = document.createElement("div");
+  fs.className = "fs";
+  fs.textContent = fmtSize(file.size);
+  var fu = document.createElement("div");
+  fu.className = "fu";
+  fu.title = t("copy_link");
+  fu.textContent = file.url;
+  fu.addEventListener("click", function(e) { e.stopPropagation(); copyText(file.url); });
+  fi.appendChild(fn);
+  fi.appendChild(fs);
+  fi.appendChild(fu);
+
+  var fa = document.createElement("div");
+  fa.className = "fa";
+
+  function makeBtn(svgHtml, cls, titleKey, onClick) {
+    var b = document.createElement("button");
+    if (cls) b.className = cls;
+    b.title = t(titleKey);
+    b.appendChild(createSvg(svgHtml));
+    b.addEventListener("click", function(e) { e.stopPropagation(); onClick(); });
+    return b;
+  }
+
+  var enlargeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>';
+  var copySvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+  var stopSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+  fa.appendChild(makeBtn(enlargeSvg, "", "view_qr", function() { openQrModal(file); }));
+  fa.appendChild(makeBtn(copySvg, "", "copy_link", function() { copyText(file.url); }));
+  fa.appendChild(makeBtn(stopSvg, "danger", "stop_share", function() {
+    invoke("stop_share", { id: file.id }).then(function() { c.remove(); updateEmpty(); });
+  }));
+
+  c.appendChild(fqr);
+  c.appendChild(fi);
+  c.appendChild(fa);
+
   c.addEventListener("click", function(e) {
     if (e.target.closest(".fa button") || e.target.closest(".fu")) return;
     openQrModal(file);
   });
-  c.querySelector(".fu").addEventListener("click", function(e) { e.stopPropagation(); copyText(file.url); });
-  c.querySelector(".fa button:nth-child(1)").addEventListener("click", function(e) { e.stopPropagation(); openQrModal(file); });
-  c.querySelector(".fa button:nth-child(2)").addEventListener("click", function(e) { e.stopPropagation(); copyText(file.url); });
-  c.querySelector(".fa button.danger").addEventListener("click", function(e) {
-    e.stopPropagation();
-    invoke("stop_share", { id: file.id }).then(function() { c.remove(); updateEmpty(); });
-  });
-  fileList.appendChild(c);
+
+  var fl = fileList || document.getElementById("file-list");
+  if (fl) fl.appendChild(c);
 }
 
 function updateEmpty() {
-  emptyHint.style.display = fileList.children.length === 0 ? "block" : "none";
+  if (emptyHint) emptyHint.style.display = (fileList && fileList.children.length === 0) ? "block" : "none";
 }
 
 async function shareNow(paths) {
   if (!paths || paths.length === 0) { toast(t("toast_no_files")); return; }
   try {
     var bundle = await invoke("share_files", { paths: paths });
-    await renderFileCard(bundle);
+    renderFileCard(bundle);
+    openQrModal(bundle);
     updateEmpty();
   } catch (e) { toast(t("toast_share_failed") + ": " + e); }
 }
@@ -120,14 +179,14 @@ async function loadServerInfo() {
         navigator.clipboard.writeText(addr).then(function() { toast(t("toast_copied")); });
       };
     }
-  } catch (e) { if (settingsIp) settingsIp.textContent = "未就绪"; }
+  } catch (e) { if (settingsIp) settingsIp.textContent = t("not_ready"); }
 }
 
 async function loadSendQr() {
   try {
     var dataUrl = await invoke("get_send_qr", { size: 256 });
-    sendQrWrap.innerHTML = '<img src="' + dataUrl + '" alt="QR" />';
-  } catch (e) { sendQrWrap.innerHTML = '<span class="qrl">加载失败</span>'; }
+    if (sendQrWrap) sendQrWrap.innerHTML = '<img src="' + dataUrl + '" alt="QR" />';
+  } catch (e) { if (sendQrWrap) sendQrWrap.innerHTML = '<span class="qrl">' + t("load_failed") + '</span>'; }
 }
 
 export { setupDragDrop, setupModal, closeModal, openQrModal, setupClearAll, renderFileCard, updateEmpty, shareNow, loadServerInfo, loadSendQr };

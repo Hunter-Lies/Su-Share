@@ -72,8 +72,10 @@ pub fn run() {
         if !args.is_empty() {
             println!("[Su!] forwarding {} path(s) to existing instance", args.len());
             forward_to_instance(port, &args);
+        } else {
+            println!("[Su!] existing instance found, focusing window");
+            forward_to_instance(port, &["__focus__".to_string()]);
         }
-        // Exit - the existing instance handles everything
         std::process::exit(0);
     }
 
@@ -116,6 +118,7 @@ pub fn run() {
         batch_expected: std::sync::Mutex::new(0),
         batch_received_count: std::sync::Mutex::new(0),
         auto_receive: std::sync::Mutex::new(true),
+        auto_destroy: std::sync::Mutex::new(false),
         pending_confirmations: std::sync::Mutex::new(std::collections::HashMap::new()),
         clear_on_close: std::sync::Mutex::new(false),
         lang: std::sync::Mutex::new("zh-CN".into()),
@@ -123,6 +126,16 @@ pub fn run() {
     });
     state::load_received(&app_state);
     state::load_shares(&app_state);
+    if let Ok(mut f) = app_state.files.lock() { f.clear(); }
+    if let Ok(mut b) = app_state.bundles.lock() { b.clear(); }
+    let ad_path = data_dir.join("auto_destroy.cfg");
+    if ad_path.exists() {
+        if let Ok(val) = std::fs::read_to_string(&ad_path) {
+            if let Ok(enabled) = val.trim().parse::<bool>() {
+                *app_state.auto_destroy.lock().unwrap() = enabled;
+            }
+        }
+    }
 
     let ss = Arc::clone(&app_state);
     thread::spawn(move || http::start_http_server(ss));
@@ -134,7 +147,8 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .manage(app_state)
         .invoke_handler(tauri::generate_handler![
-            commands::confirm_upload, commands::get_auto_receive, commands::set_auto_receive, commands::share_files, commands::get_server_info, commands::stop_share,
+            commands::confirm_upload, commands::get_auto_receive, commands::set_auto_receive, commands::get_auto_destroy, commands::set_auto_destroy, commands::get_autostart, commands::set_autostart, commands::read_page, commands::share_files, commands::get_server_info, commands::stop_share,
+            commands::get_auto_destroy, commands::set_auto_destroy, commands::read_page,
             commands::clear_all_shares, commands::clear_received, commands::generate_qr,
             commands::pick_files, commands::get_send_qr, commands::pick_folder,
             #[cfg(target_os = "windows")] commands::create_shortcut, commands::resize_window, commands::minimize_window,
@@ -159,9 +173,13 @@ pub fn run() {
             app.listen("show-qr-popup", move |_event| {
                 // Show main window and let frontend modal handle QR display
                 if let Some(window) = app_handle.get_webview_window("main") {
-                    window.show().ok();
-                    window.set_focus().ok();
-                }
+                window.show().ok();
+                window.unminimize().ok();
+                window.set_focus().ok();
+                let _ = window.set_always_on_top(true);
+                std::thread::sleep(std::time::Duration::from_millis(150));
+                let _ = window.set_always_on_top(false);
+            }
             });
 
             // Build system tray
@@ -176,9 +194,12 @@ pub fn run() {
                     match event.id().as_ref() {
                         "show" => {
                             if let Some(window) = app.get_webview_window("main") {
-                                window.show().ok();
-                                window.set_focus().ok();
-                            }
+                window.show().ok();
+                window.set_focus().ok();
+                let _ = window.set_always_on_top(true);
+                std::thread::sleep(std::time::Duration::from_millis(200));
+                let _ = window.set_always_on_top(false);
+            }
                         }
                         "quit" => { if *state_for_tray.clear_on_close.lock().unwrap() { state_for_tray.received.lock().unwrap().clear(); crate::state::save_received(&state_for_tray); } app.exit(0); }
                         _ => {}
@@ -236,10 +257,6 @@ pub fn run() {
 // CLI launch from context menu: share directly and show popup
             if !args.is_empty() {
                 println!("[Su!] CLI launch with {} path(s)", args.len());
-                if let Some(main_win) = app.get_webview_window("main") {
-                    main_win.hide().ok();
-                }
-
                 let mut map = state.files.lock().unwrap();
                 let mut file_ids: Vec<String> = Vec::new();
                 let mut shared_names: Vec<String> = Vec::new();

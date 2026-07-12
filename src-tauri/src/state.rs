@@ -41,6 +41,7 @@ pub struct AppState {
     pub batch_expected: Mutex<u64>,
     pub batch_received_count: Mutex<u64>,
     pub auto_receive: Mutex<bool>,
+    pub auto_destroy: Mutex<bool>,
     pub pending_confirmations: Mutex<std::collections::HashMap<String, std::sync::mpsc::Sender<bool>>>,
 }
 

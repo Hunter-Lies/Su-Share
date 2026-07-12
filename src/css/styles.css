@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg: #fafaf9;
   --bg2: #fff;
   --sb: #f5f3f0;
@@ -165,6 +165,10 @@ body {
   font-size: 11px;
   color: var(--t2);
   margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 .s-nav {
   display: flex;
@@ -1358,3 +1362,238 @@ body {
   .btn-accept { background: #e8e8ec; color: #1c1c1e; }
 }
 
+/* ===== Animation & Polish Overrides ===== */
+
+/* Tab content switching */
+.tab-content {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  visibility: hidden;
+}
+.tab-content:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+.tab-content.hidden {
+  display: flex;
+}
+
+/* Modal visibility animation */
+.modal {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s;
+}
+.modal:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+.modal.hidden {
+  display: flex;
+}
+.modal-card {
+  transform: scale(0.96) translateY(10px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  animation: none;
+}
+.modal:not(.hidden) .modal-card {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+.modal.hidden .modal-card {
+  transform: scale(0.96) translateY(10px);
+  opacity: 0;
+}
+
+/* Upload confirm modal polish */
+#upload-confirm-modal {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s;
+}
+#upload-confirm-modal:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+#upload-confirm-modal.hidden {
+  display: flex;
+}
+#upload-confirm-modal .modal-card {
+  background: var(--bg2);
+  color: var(--t);
+  transform: scale(0.96) translateY(10px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+#upload-confirm-modal:not(.hidden) .modal-card {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+#upload-confirm-modal .confirm-card h3 { color: var(--t); }
+#upload-confirm-modal .confirm-card p { color: var(--t2); }
+#upload-confirm-modal .btn-reject { background: var(--card-hover); color: var(--t); transition: transform 0.1s ease, background 0.15s ease; }
+#upload-confirm-modal .btn-accept { background: var(--t); color: var(--bg2); transition: transform 0.1s ease, opacity 0.15s ease; }
+#upload-confirm-modal .btn-reject:hover { background: var(--al); }
+#upload-confirm-modal .btn-accept:hover { opacity: 0.9; }
+#upload-confirm-modal .btn-reject:active,
+#upload-confirm-modal .btn-accept:active { transform: scale(0.96); }
+
+/* Toast slide+fade */
+.toast {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+.toast:not(.hidden) {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  visibility: visible;
+}
+
+/* File card entrance */
+@keyframes fcard-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.fcard {
+  animation: fcard-in 0.25s ease backwards;
+}
+
+/* Received card entrance */
+@keyframes rcard-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.rcard, .rcard-header {
+  animation: rcard-in 0.25s ease backwards;
+}
+
+/* Drag zone feedback */
+.card-b {
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.card-b:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+.card-b.drag-over {
+  transform: scale(1.01);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+.card-b .dsvg {
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.card-b:hover .dsvg, .card-b.drag-over .dsvg {
+  transform: translateY(-2px);
+}
+
+/* Sidebar nav polish */
+.s-nav-item {
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+.s-nav-item:active {
+  transform: scale(0.98);
+}
+
+/* Button active states */
+.tb-btn, .set-btn, .set-link-btn, .rcard-btn, .fcard .fa button, .modal-btn, .modal-right-copy, #clear-all-btn {
+  transition: transform 0.1s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+.tb-btn:active, .set-btn:active, .set-link-btn:active, .rcard-btn:active, .fcard .fa button:active, .modal-btn:active, .modal-right-copy:active, #clear-all-btn:active {
+  transform: scale(0.96);
+}
+
+/* Settings sub-page transition */
+.settings-wrap {
+  transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s;
+}
+.settings-wrap.slide-out {
+  transform: translateX(-30px);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+.settings-wrap.hidden {
+  display: flex;
+  transform: translateX(-30px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Set nav item polish */
+.set-nav-item {
+  transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+.set-nav-item:hover {
+  border-color: var(--t2);
+}
+.set-nav-item:active {
+  transform: scale(0.995);
+}
+
+/* Dropdown menu entrance */
+.set-dd-menu {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top center;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  display: block;
+  visibility: hidden;
+}
+.set-dd.open .set-dd-menu {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+}
+
+/* Toggle knob elastic */
+.set-toggle-knob::after {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* QR code polish */
+.qrbox img {
+  transition: transform 0.3s ease;
+}
+
+/* Received empty fade */
+.received-empty {
+  animation: fade-in 0.4s ease;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Share URL hover */
+.share-url {
+  transition: color 0.15s ease, background 0.15s ease;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.share-url:hover {
+  background: var(--al);
+}
+
+/* Window resize handles for frameless window */
+.resize-handle {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: auto;
+}
+.resize-handle.n { top: 0; left: 8px; right: 8px; height: 4px; cursor: ns-resize; }
+.resize-handle.e { top: 8px; right: 0; bottom: 8px; width: 4px; cursor: ew-resize; }
+.resize-handle.s { bottom: 0; left: 8px; right: 8px; height: 4px; cursor: ns-resize; }
+.resize-handle.w { top: 8px; left: 0; bottom: 8px; width: 4px; cursor: ew-resize; }
+.resize-handle.ne { top: 0; right: 0; width: 8px; height: 8px; cursor: nesw-resize; }
+.resize-handle.nw { top: 0; left: 0; width: 8px; height: 8px; cursor: nwse-resize; }
+.resize-handle.se { bottom: 0; right: 0; width: 8px; height: 8px; cursor: nwse-resize; }
+.resize-handle.sw { bottom: 0; left: 0; width: 8px; height: 8px; cursor: nesw-resize; }

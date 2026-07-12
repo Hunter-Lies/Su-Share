@@ -1,0 +1,40 @@
+<div class="tab-content" id="tab-share">
+            <div class="cards">
+              <div class="card card-a">
+                <p class="cl" data-i18n="scan_send">扫码发送</p>
+                <div class="qrbox" id="send-qr-wrap">
+                  <span class="qrl" data-i18n="generating">生成中...</span>
+                </div>
+                <p class="ch">
+                  <code
+                    class="share-url"
+                    id="share-url"
+                    title="点击复制链接"
+                  ></code>
+                </p>
+              </div>
+              <div class="card card-b" id="drop-zone">
+                <i
+                  class="fa-solid fa-cloud-arrow-up dsvg"
+                  style="font-size: 36px; color: var(--t)"
+                ></i>
+                <p class="cl" data-i18n="share_to_phone">分享到手机</p>
+                <p class="ch">
+                  <span data-i18n="drop_hint">拖拽文件到此处，或</span
+                  ><span class="link" id="browse-link" data-i18n="browse_files"
+                    >选择文件</span
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="slist">
+              <div class="slist-hd">
+                <span data-i18n="sharing">分享中</span
+                ><button id="clear-all-btn" data-i18n="clear_all">清空</button>
+              </div>
+              <div id="file-list" class="flist"></div>
+              <div id="empty-hint" class="ehint" data-i18n="no_shares">
+                暂无分享，拖入文件开始
+              </div>
+            </div>
+          </div>

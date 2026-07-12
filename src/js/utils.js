@@ -1,7 +1,8 @@
-// utils.js — utility functions for Su!
+// utils.js - utility functions for Su!
 import { invoke, toastEl, qrCache } from './state.js';
-var _toastTimer = null;
 import { t } from './i18n/index.js';
+
+var _toastTimer = null;
 
 function fmtSize(bytes) {
   if (bytes < 1024) return bytes + " B";
@@ -18,19 +19,19 @@ function toast(msg) {
 }
 
 async function copyText(text) {
-  // Show toast immediately
-  try { toast(t("toast_copied")); } catch(e) {}
-  // Then do clipboard copy
   try {
     await navigator.clipboard.writeText(text);
+    toast(t("toast_copied"));
   } catch(e) {
     var ta = document.createElement("textarea");
     ta.value = text;
     ta.style.cssText = "position:fixed;opacity:0";
     document.body.appendChild(ta);
     ta.select();
-    document.execCommand("copy");
+    var ok = document.execCommand("copy");
     document.body.removeChild(ta);
+    if (ok) toast(t("toast_copied"));
+    else toast(t("toast_failed"));
   }
 }
 

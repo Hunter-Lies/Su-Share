@@ -1,7 +1,21 @@
 fn main() {
     println!("cargo:rerun-if-changed=../src/index.html");
+    println!("cargo:rerun-if-changed=../src/pages/share.html");
+   println!("cargo:rerun-if-changed=../src/pages/received.html");
+    println!("cargo:rerun-if-changed=../src/pages/settings.html");
+    println!("cargo:rerun-if-changed=../src/pages/settings-software.html");
+   println!("cargo:rerun-if-changed=../src/pages/settings-security.html");
+    println!("cargo:rerun-if-changed=../src/pages/settings-receive.html");
+    println!("cargo:rerun-if-changed=../src/pages/settings-notification.html");
+    println!("cargo:rerun-if-changed=../src/pages/settings-appearance.html");
     println!("cargo:rerun-if-changed=../src/css/styles.css");
     println!("cargo:rerun-if-changed=../src/js/main.js");
+    println!("cargo:rerun-if-changed=../src/js/state.js");
+    println!("cargo:rerun-if-changed=../src/js/share.js");
+    println!("cargo:rerun-if-changed=../src/js/received.js");
+    println!("cargo:rerun-if-changed=../src/js/settings.js");
+    println!("cargo:rerun-if-changed=../src/js/theme.js");
+    println!("cargo:rerun-if-changed=../src/js/utils.js");
     println!("cargo:rerun-if-changed=../src/js/i18n/index.js");
     println!("cargo:rerun-if-changed=../src/js/i18n/zh-CN.js");
     println!("cargo:rerun-if-changed=../src/js/i18n/zh-TW.js");
