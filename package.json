@@ -4,6 +4,8 @@
     "version": "0.1.0",
     "type": "module",
     "scripts": {
+        "dev": "tauri dev",
+        "build": "tauri build",
         "prebuild": "python src-tauri/web/i18n/build.py",
         "tauri": "npm run prebuild && tauri"
     },
